@@ -3,538 +3,458 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shiksha Setu AI | Enterprise Learning Platform</title>
+  <title>Shiksha Setu AI | Duolingo-Style Learning Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
     body {
       font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
-      background-color: #f1f5f9;
+      background-color: #f0fdf4;
     }
-    .card-hover {
-      transition: all 0.25s ease;
+    .duo-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 0 0 #cbd5e1;
     }
-    .card-hover:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.08);
+    .duo-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 0 #94a3b8;
     }
-    .pulse-mic {
-      animation: pulse 1.5s infinite;
+    .duo-card:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 0 #94a3b8;
     }
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-      70% { transform: scale(1.06); box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
-      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    .duo-btn-green {
+      box-shadow: 0 5px 0 0 #15803d;
+      transition: all 0.1s ease;
+    }
+    .duo-btn-green:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 0 #15803d;
+    }
+    .slide-in-up {
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .bounce-fox {
+      animation: foxBounce 2s infinite ease-in-out;
+    }
+    @keyframes foxBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col text-slate-800">
 
-  <!-- ================= FAMILY / CHILD SELECTION GATEWAY ================= -->
-  <div id="authGatewayModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl space-y-6 my-auto border border-slate-100">
-      <div class="text-center space-y-2">
-        <span class="bg-blue-100 text-blue-900 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">Shiksha Setu AI 🇮🇳</span>
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">अभिभावक एवं छात्र पोर्टल</h2>
-        <p class="text-xs md:text-sm text-slate-500">अपने सभी बच्चों के लिए एक ही जगह पर हिंदी, अंग्रेज़ी और गणित की प्रगति सुरक्षित रखें।</p>
-      </div>
-
-      <!-- Existing Children Quick Switch -->
-      <div id="familyMembersSection" class="space-y-3 hidden">
-        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide">पंजीकृत छात्र चुनें (Select Active Student):</label>
-        <div id="familyMembersList" class="space-y-2.5"></div>
-        <div class="relative flex py-2 items-center">
-          <div class="flex-grow border-t border-slate-200"></div>
-          <span class="flex-shrink mx-4 text-xs text-slate-400 font-bold uppercase">या नया छात्र जोड़ें</span>
-          <div class="flex-grow border-t border-slate-200"></div>
+  <!-- ================= CARTOON FOX LOGIN MODAL (SLIDE-IN GATEWAY) ================= -->
+  <div id="loginModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-[32px] max-w-md w-full p-6 md:p-8 shadow-2xl space-y-6 slide-in-up border-4 border-emerald-500 relative overflow-hidden">
+      
+      <!-- Cartoon Fox SVG Mascot -->
+      <div class="flex flex-col items-center text-center space-y-3">
+        <div class="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center shadow-inner bounce-fox border-4 border-amber-400">
+          <svg viewBox="0 0 100 100" class="w-16 h-16">
+            <!-- Fox Face Base -->
+            <polygon points="50,15 85,75 15,75" fill="#f97316"/>
+            <!-- Inner Ears -->
+            <polygon points="32,45 50,20 42,55" fill="#fdba74"/>
+            <polygon points="68,45 50,20 58,55" fill="#fdba74"/>
+            <!-- White Cheeks -->
+            <path d="M15,75 Q50,95 85,75 Q50,55 15,75" fill="#ffffff"/>
+            <!-- Eyes -->
+            <circle cx="38" cy="65" r="4" fill="#0f172a"/>
+            <circle cx="62" cy="65" r="4" fill="#0f172a"/>
+            <!-- Nose -->
+            <ellipse cx="50" cy="72" rx="5" ry="3" fill="#0f172a"/>
+            <!-- Graduation Cap -->
+            <polygon points="50,2 80,14 50,26 20,14" fill="#1e293b"/>
+            <rect x="47" y="24" width="6" height="6" fill="#1e293b"/>
+            <path d="M72,17 L72,27 C72,30 68,30 68,27 L68,17" stroke="#facc15" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+        <div>
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">Hi, I'm Foxy! 🦊</span>
+          <h2 class="text-2xl font-extrabold text-slate-900 mt-1">शिखा सेतु में आपका स्वागत है</h2>
+          <p class="text-xs text-slate-500">लॉगिन करें और अपनी पढ़ाई का सफर शुरू करें।</p>
         </div>
       </div>
 
-      <!-- Add Child Form -->
-      <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-        <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-2"><span>➕</span> नया छात्र जोड़ें (Register Child)</h3>
+      <!-- Credentials Form -->
+      <div class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">छात्र का पूरा नाम:</label>
-          <input id="inputChildName" type="text" placeholder="उदा. राहुल सिंह" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 font-bold text-slate-800 focus:outline-none focus:border-blue-600 text-sm shadow-sm" />
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">विद्यार्थी का नाम (Name):</label>
+          <input id="loginName" type="text" placeholder="उदा. राहुल कुमार" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-3.5 font-bold text-slate-800 focus:outline-none focus:border-emerald-500 text-sm shadow-sm" />
         </div>
+
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">कक्षा (Class Level):</label>
-          <select id="inputChildClass" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 font-bold text-slate-800 focus:outline-none focus:border-blue-600 text-sm shadow-sm">
-            <option value="Nursery">Nursery / LKG (अक्षर और बुनियादी गिनती)</option>
-            <option value="UKG">UKG / Prep (शब्द और बेसिक जोड़)</option>
-            <option value="Class 1">Class 1 (मात्राएं और जोड़-घटाव)</option>
-            <option value="Class 2">Class 2 (English Phonics & Tables)</option>
-            <option value="Class 3">Class 3 (गणित और बेसिक व्याकरण)</option>
-            <option value="Class 4">Class 4 (Multiply & English Sentences)</option>
-            <option value="Class 5">Class 5 (Foundation Mastery)</option>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">मोबाइल नंबर या ईमेल (Phone / Email):</label>
+          <input id="loginCredential" type="text" placeholder="उदा. 9876543210 या email@gmail.com" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-3.5 font-bold text-slate-800 focus:outline-none focus:border-emerald-500 text-sm shadow-sm" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">कक्षा चुनें (Class Level):</label>
+          <select id="loginClass" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-3.5 font-bold text-slate-800 focus:outline-none focus:border-emerald-500 text-sm shadow-sm">
+            <option value="Class 5">Class 5 (Foundation)</option>
+            <option value="Class 8">Class 8 (Middle Base)</option>
+            <option value="Class 10">Class 10 (Board & Career Prep)</option>
+            <option value="Class 12">Class 12 (Advanced & Jobs)</option>
           </select>
         </div>
-        <button onclick="registerNewChild()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-blue-600/30 transition text-sm">
-          प्रोफाइल सहेजें और शुरू करें (Save & Launch)
+
+        <button onclick="submitLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-4 rounded-2xl duo-btn-green transition text-base shadow-lg">
+          🚀 शुरू करें (Let's Go!)
         </button>
       </div>
+
     </div>
   </div>
 
-  <!-- ================= MAIN APP VIEW ================= -->
-  <div id="coreAppContainer" class="hidden flex-1 flex flex-col">
-    <!-- TOP NAVIGATION & METRICS -->
-    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
+  <!-- ================= MAIN APP INTERFACE ================= -->
+  <div id="mainAppContainer" class="hidden flex-1 flex flex-col">
+    
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bg-white border-b-2 border-slate-200 sticky top-0 z-30 shadow-sm">
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">🇮🇳</div>
+          <div class="w-10 h-10 bg-amber-400 rounded-2xl border-2 border-amber-600 flex items-center justify-center font-black text-xl shadow">🦊</div>
           <div>
             <div class="flex items-center gap-2">
               <h1 class="text-base font-extrabold text-slate-900 tracking-tight">Shiksha Setu AI</h1>
-              <span id="navActiveChildBadge" class="bg-blue-100 text-blue-800 font-extrabold px-2.5 py-0.5 rounded-full text-xs">Rahul (Class 2)</span>
+              <span id="badgeUser" class="bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-0.5 rounded-full text-xs">Rahul</span>
             </div>
-            <button onclick="openGateway()" class="text-xs text-blue-600 hover:underline font-bold mt-0.5 flex items-center gap-1">🔄 छात्र बदलें (Switch Child)</button>
+            <button onclick="openLoginModal()" class="text-xs text-blue-600 hover:underline font-bold">🔄 प्रोफाइल बदलें</button>
           </div>
         </div>
 
-        <!-- Gamification XP & Timer -->
+        <!-- Gamification Stats -->
         <div class="flex items-center gap-3">
-          <div class="hidden sm:flex items-center gap-2 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl">
-            <span class="text-amber-500 font-extrabold">⭐</span>
-            <div>
-              <div class="text-[10px] text-amber-700 font-bold uppercase">Total XP</div>
-              <div id="navTotalXP" class="text-xs font-extrabold text-amber-900">0 XP</div>
-            </div>
+          <div class="flex items-center gap-1.5 bg-amber-50 border-2 border-amber-200 px-3 py-1.5 rounded-2xl font-extrabold text-amber-800 text-xs">
+            <span>🔥</span> <span id="streakCount">3 Days Streak</span>
           </div>
-
-          <div class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-right">
-            <div class="text-[10px] text-slate-400 font-bold uppercase">Focus Timer</div>
-            <div id="navFocusTimer" class="text-sm font-mono font-extrabold text-blue-900">60:00</div>
+          <div class="flex items-center gap-1.5 bg-sky-50 border-2 border-sky-200 px-3 py-1.5 rounded-2xl font-extrabold text-sky-800 text-xs">
+            <span>⭐</span> <span id="xpCount">120 XP</span>
           </div>
-
-          <button onclick="openParentDashboard()" class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-1.5">
-            <span>📊</span> Parent Hub
-          </button>
         </div>
       </div>
     </header>
 
-    <!-- DASHBOARD VIEW: SUBJECT SELECTION -->
-    <div id="viewDashboard" class="max-w-5xl w-full mx-auto px-4 py-6 flex-1 space-y-6">
-      <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div class="space-y-2">
-          <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">Cloud-Synced Learning</span>
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">नमस्ते! आज कौन सा विषय पढ़ना है?</h2>
-          <p class="text-xs md:text-sm text-blue-200">विषय चुनें, AI शिक्षक से समझें, टेस्ट पास करें और अपने पॉइंट्स बढ़ाएं।</p>
+    <!-- DASHBOARD VIEW: THE 4 PILLARS -->
+    <div id="viewDashboard" class="max-w-5xl w-full mx-auto px-4 py-8 flex-1 space-y-6">
+      
+      <!-- Welcome Banner with Fox Illustration -->
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-6 md:p-8 rounded-[32px] shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border-b-8 border-emerald-800">
+        <div class="space-y-2 text-center md:text-left">
+          <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase">Duolingo-Style Learning</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold">आज कौन सा विषय अभ्यास करना है?</h2>
+          <p class="text-xs md:text-sm text-emerald-100">अपने पसंदीदा विषय पर क्लिक करें और AI शिक्षक के साथ सीखें।</p>
+        </div>
+        <div class="w-20 h-20 bg-amber-400 rounded-full border-4 border-white flex items-center justify-center text-4xl shadow-lg bounce-fox shrink-0">
+          🦊
         </div>
       </div>
 
-      <!-- Subject Cards Grid (Strictly Hindi, English, Maths) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <!-- English -->
-        <div onclick="launchSubject('english')" class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm card-hover cursor-pointer flex flex-col justify-between space-y-6 group">
+      <!-- 4 Core Pillars Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- 1. English Card -->
+        <div onclick="openSubject('english')" class="bg-white rounded-[28px] p-6 duo-card border-2 border-slate-200 cursor-pointer flex flex-col justify-between space-y-6">
           <div class="space-y-3">
-            <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl group-hover:scale-110 transition shadow-inner">🗣️</div>
-            <h3 class="text-lg font-extrabold text-slate-900">English (अंग्रेज़ी)</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">Phonics, Vocabulary, Grammar, and Confident Speaking.</p>
+            <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">🗣️</div>
+            <h3 class="text-lg font-extrabold text-slate-900">English Speaking</h3>
+            <p class="text-xs text-slate-500">Phonics, daily sentences, and conversational practice.</p>
           </div>
           <div class="flex items-center justify-between text-xs font-extrabold text-blue-600 pt-3 border-t border-slate-100">
-            <span id="cardProgressEnglish">0 / 3 Topics</span>
-            <span class="bg-blue-50 px-3 py-1.5 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition">अभ्यास करें →</span>
+            <span id="progEnglish">2 / 3 Levels</span>
+            <span class="bg-blue-600 text-white px-3 py-1.5 rounded-xl">अभ्यास →</span>
           </div>
         </div>
 
-        <!-- Hindi -->
-        <div onclick="launchSubject('hindi')" class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm card-hover cursor-pointer flex flex-col justify-between space-y-6 group">
+        <!-- 2. Hindi Card -->
+        <div onclick="openSubject('hindi')" class="bg-white rounded-[28px] p-6 duo-card border-2 border-slate-200 cursor-pointer flex flex-col justify-between space-y-6">
           <div class="space-y-3">
-            <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl group-hover:scale-110 transition shadow-inner">📖</div>
-            <h3 class="text-lg font-extrabold text-slate-900">Hindi (हिन्दी व्याकरण)</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">वर्णमाला, मात्राएं, शब्द रचना और मानक वाक्य निर्माण।</p>
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">📖</div>
+            <h3 class="text-lg font-extrabold text-slate-900">Hindi Vyakaran</h3>
+            <p class="text-xs text-slate-500">वर्णमाला, मात्राएं, और शुद्ध वाक्य रचना।</p>
           </div>
           <div class="flex items-center justify-between text-xs font-extrabold text-emerald-600 pt-3 border-t border-slate-100">
-            <span id="cardProgressHindi">0 / 3 Topics</span>
-            <span class="bg-emerald-50 px-3 py-1.5 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition">अभ्यास करें →</span>
+            <span id="progHindi">1 / 3 Levels</span>
+            <span class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl">अभ्यास →</span>
           </div>
         </div>
 
-        <!-- Maths -->
-        <div onclick="launchSubject('maths')" class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm card-hover cursor-pointer flex flex-col justify-between space-y-6 group">
+        <!-- 3. Maths Card -->
+        <div onclick="openSubject('maths')" class="bg-white rounded-[28px] p-6 duo-card border-2 border-slate-200 cursor-pointer flex flex-col justify-between space-y-6">
           <div class="space-y-3">
-            <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl group-hover:scale-110 transition shadow-inner">➗</div>
-            <h3 class="text-lg font-extrabold text-slate-900">Maths (गणित बेसिक)</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">गिनती, जोड़-घटाव, पहाड़े और रोज़मर्रा का प्रतिशत हिसाब।</p>
+            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">➗</div>
+            <h3 class="text-lg font-extrabold text-slate-900">Maths Foundation</h3>
+            <p class="text-xs text-slate-500">गिनती, जोड़-घटाव, और प्रतिशत के बेसिक नियम।</p>
           </div>
           <div class="flex items-center justify-between text-xs font-extrabold text-amber-600 pt-3 border-t border-slate-100">
-            <span id="cardProgressMaths">0 / 3 Topics</span>
-            <span class="bg-amber-50 px-3 py-1.5 rounded-xl group-hover:bg-amber-600 group-hover:text-white transition">अभ्यास करें →</span>
+            <span id="progMaths">3 / 3 Levels</span>
+            <span class="bg-amber-600 text-white px-3 py-1.5 rounded-xl">अभ्यास →</span>
           </div>
         </div>
+
+        <!-- 4. Career Counselling Card -->
+        <div onclick="openSubject('career')" class="bg-white rounded-[28px] p-6 duo-card border-2 border-slate-200 cursor-pointer flex flex-col justify-between space-y-6">
+          <div class="space-y-3">
+            <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">🧭</div>
+            <h3 class="text-lg font-extrabold text-slate-900">Career Counselling</h3>
+            <p class="text-xs text-slate-500">10वीं और 12वीं के बाद सही सरकारी और प्राइवेट जॉब रोडमैप।</p>
+          </div>
+          <div class="flex items-center justify-between text-xs font-extrabold text-purple-600 pt-3 border-t border-slate-100">
+            <span id="progCareer">1 / 3 Roadmaps</span>
+            <span class="bg-purple-600 text-white px-3 py-1.5 rounded-xl">देखें →</span>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- VIEW SUBJECT PRACTICE (AI Teacher Window & Strict Quiz Gate) -->
-    <div id="viewPractice" class="hidden max-w-4xl w-full mx-auto px-4 py-6 flex-1 space-y-6">
+    <!-- VIEW PRACTICE & LESSON WINDOW -->
+    <div id="viewPractice" class="hidden max-w-3xl w-full mx-auto px-4 py-8 flex-1 space-y-6 slide-in-up">
       <div class="flex items-center justify-between">
-        <button onclick="returnToDashboard()" class="text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl transition shadow-sm">
+        <button onclick="returnToDashboard()" class="bg-white border-2 border-slate-300 hover:bg-slate-100 text-slate-700 font-bold px-4 py-2.5 rounded-2xl shadow-sm transition text-xs">
           ← डैशबोर्ड पर वापस जाएं
         </button>
-        <span id="practiceHeaderTitle" class="text-xs font-extrabold text-blue-900 bg-blue-50 border border-blue-200 px-4 py-1.5 rounded-full uppercase tracking-wide">English Practice</span>
+        <span id="practiceCategoryBadge" class="bg-emerald-100 text-emerald-800 font-extrabold text-xs px-4 py-1.5 rounded-full uppercase tracking-wider">English Lesson</span>
       </div>
 
-      <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm space-y-6">
-        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+      <!-- Lesson Box -->
+      <div class="bg-white rounded-[32px] p-6 md:p-8 border-2 border-slate-200 shadow-xl space-y-6">
+        
+        <!-- AI Teacher & Fox Header -->
+        <div class="flex items-center gap-4 bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl">
+          <div class="text-3xl bounce-fox">🦊</div>
           <div>
-            <span class="text-xs font-bold uppercase text-slate-400">Interactive Topic Lesson</span>
-            <h2 id="practiceTopicTitle" class="text-xl md:text-2xl font-extrabold text-slate-900 mt-1">Topic 1: Phonics & Alphabet</h2>
+            <h4 class="text-xs font-extrabold text-amber-900 uppercase">AI Foxy Teacher</h4>
+            <p id="aiGuidanceText" class="text-sm font-bold text-slate-800 mt-0.5">ध्यान से नियम समझें और सही उत्तर चुनें!</p>
           </div>
-          <button onclick="speakAITutor()" class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-4 py-3 rounded-xl shadow-md flex items-center gap-2 transition">
-            🔊 AI शिक्षक की आवाज़ सुनें (Listen)
+          <button onclick="speakLessonAudio()" class="ml-auto bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold px-3 py-2 rounded-xl text-xs shadow">
+            🔊 सुनें
           </button>
         </div>
 
-        <!-- AI Explanation Card -->
-        <div class="bg-blue-50/80 border-l-4 border-blue-600 p-5 rounded-r-2xl space-y-2">
-          <div class="text-xs font-extrabold text-blue-700 uppercase tracking-wide">👩‍🏫 AI Teacher Guidance:</div>
-          <p id="practiceExplanation" class="text-sm md:text-base font-medium text-slate-800 leading-relaxed"></p>
+        <div class="space-y-3">
+          <h2 id="lessonTitle" class="text-xl md:text-2xl font-extrabold text-slate-900">Topic Title</h2>
+          <p id="lessonExplanation" class="text-sm md:text-base text-slate-600 leading-relaxed font-medium"></p>
         </div>
 
-        <!-- Strict Quiz Gate -->
-        <div class="space-y-4 pt-2">
-          <div class="text-xs font-extrabold uppercase text-slate-400 tracking-wider">Strict Practice Quiz (सही उत्तर चुनें):</div>
-          <p id="practiceQuestion" class="text-lg md:text-xl font-extrabold text-slate-900"></p>
-          <div id="practiceOptions" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1"></div>
+        <!-- Quiz Section -->
+        <div class="space-y-3 pt-2">
+          <div class="text-xs font-extrabold uppercase text-slate-400">Quiz Challenge (सही विकल्प चुनें):</div>
+          <p id="quizQuestion" class="text-lg font-extrabold text-slate-900"></p>
+          <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"></div>
         </div>
 
-        <div id="practiceResultBox" class="hidden p-4 rounded-2xl border text-sm"></div>
+        <div id="quizFeedbackBox" class="hidden p-4 rounded-2xl border-2 text-sm font-bold"></div>
 
-        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
-          <button onclick="startMicRecognition()" id="micButton" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-4.5 py-3 rounded-xl shadow transition flex items-center gap-2">
-            🎙️ बोलकर चेक करें (Mic)
+        <div class="pt-4 border-t-2 border-slate-100 flex items-center justify-between">
+          <button onclick="startVoiceInput()" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold px-4 py-3 rounded-2xl text-xs shadow flex items-center gap-2">
+            🎙️ बोलकर अभ्यास करें
           </button>
-          <button onclick="unlockNextTopic()" id="btnNextTopic" disabled class="text-xs font-extrabold text-white bg-slate-300 px-6 py-3 rounded-xl transition cursor-not-allowed shadow-sm">
-            अगला टॉपिक अनलॉक करें →
+          <button onclick="nextLevelAction()" id="btnNextLevel" disabled class="bg-slate-300 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-none cursor-not-allowed transition">
+            अगला स्तर अनलॉक करें →
           </button>
         </div>
+
       </div>
     </div>
 
-    <!-- VIEW PARENT HUB (Analytics & Multi-Child Summary) -->
-    <div id="viewParentHub" class="hidden max-w-4xl w-full mx-auto px-4 py-6 flex-1 space-y-6">
-      <div class="flex items-center justify-between">
-        <button onclick="returnToDashboard()" class="text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl transition shadow-sm">
-          ← डैशबोर्ड पर वापस जाएं
-        </button>
-        <span class="text-xs font-extrabold text-amber-900 bg-amber-100 border border-amber-200 px-4 py-1.5 rounded-full uppercase tracking-wide">Parent Dashboard & Analytics</span>
-      </div>
-
-      <div class="bg-amber-50/70 border-2 border-amber-200 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm">
-        <div class="space-y-1 border-b border-amber-200 pb-4">
-          <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">📊 सभी बच्चों की प्रगति रिपोर्ट (Family Hub)</h2>
-          <p class="text-xs md:text-sm text-slate-600">हर बच्चे की विषय-वार प्रगति और कुल अर्जित XP पॉइंट्स नीचे देखें।</p>
-        </div>
-
-        <div id="parentChildrenCardsContainer" class="space-y-4"></div>
-
-        <!-- WhatsApp Instant Report -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
-          <h3 class="font-extrabold text-slate-900 text-sm">📲 WhatsApp पर तुरंत प्रोग्रेस रिपोर्ट भेजें</h3>
-          <div class="flex flex-col sm:flex-row gap-3">
-            <input id="parentWhatsAppInput" type="tel" placeholder="WhatsApp नंबर (उदा. 9876543210)" class="flex-1 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-600 font-bold" />
-            <button onclick="dispatchWhatsAppReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-6 py-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition">
-              <span>💬</span> Send WhatsApp Report
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <footer class="bg-slate-900 text-slate-400 text-xs py-4 px-4 text-center mt-auto">
-    <strong>Shiksha Setu AI</strong> — Enterprise-Grade Multi-Child Platform • Hindi, English & Maths
+    <strong>Shiksha Setu AI</strong> — Duolingo-Style Gamified Learning Platform 🇮🇳
   </footer>
 
   <script>
-    // ================= ENTERPRISE DATA LAYER (CLOUD-READY SCHEMA) =================
-    // This structured state can be synced instantly with Supabase / Firebase later.
-    let cloudDB = JSON.parse(localStorage.getItem('shiksha_enterprise_db')) || {
-      students: []
-    };
-    let currentStudentId = localStorage.getItem('shiksha_active_student') || null;
-    let activeSubject = 'english';
-    let topicIndex = 0;
-    let focusSeconds = 3600;
+    // ================= STATE & DATA =================
+    let currentUser = JSON.parse(localStorage.getItem('shiksha_duo_user')) || null;
+    let currentSubject = 'english';
+    let currentLevelIdx = 0;
 
-    // Strict Curriculum (Hindi, English, Maths)
-    const curriculumData = {
+    const database = {
       english: [
-        { title: "Topic 1: Phonics & Alphabet", explanation: "अंग्रेज़ी अक्षरों की आवाज़ (Phonics) सीखें। A for Apple, B for Ball.", q: "Apple (सेब) की शुरुआत किस अंग्रेज़ी अक्षर से होती है?", options: ["B", "C", "A", "M"], correct: 2, exp: "बिल्कुल सही! A for Apple होता है।" },
-        { title: "Topic 2: Self Introduction", q: "अपने परिचय में 'मेरा नाम' कहने के लिए क्या बोलते हैं?", options: ["My name is...", "You are...", "He is...", "They are..."], correct: 0, exp: "शाबाश! 'My name is...' बोला जाता है।" },
-        { title: "Topic 3: Daily Politeness", q: "'कृपया मेरी मदद करें' को अंग्रेज़ी में क्या कहेंगे?", options: ["Thank you", "Please help me", "Good morning", "Goodbye"], correct: 1, exp: "सही! Please help me सबसे विनम्र तरीका है।" }
+        { title: "Level 1: Phonics & ABC", exp: "अंग्रेज़ी अक्षरों की आवाज़ (Phonics) पहचानें। A for Apple, B for Ball.", q: "Apple (सेब) की शुरुआत किस अंग्रेज़ी अक्षर से होती है?", options: ["B", "C", "A", "M"], correct: 2, feedback: "शाबाश! A for Apple होता है। (+20 XP)" },
+        { title: "Level 2: Self Introduction", exp: "अपना परिचय देते समय 'मेरा नाम' कहने के लिए 'My name is' का उपयोग करते हैं।", q: "अपने नाम बताने के लिए सही वाक्य चुनें:", options: ["My name is...", "You are...", "He is...", "They are..."], correct: 0, feedback: "बिल्कुल सही! My name is... बोला जाता है। (+20 XP)" },
+        { title: "Level 3: Polite Expressions", exp: "किसी से विनम्रता से मदद मांगने के लिए 'Please help me' कहते हैं।", q: "'कृपया मेरी मदद करें' को अंग्रेज़ी में क्या कहेंगे?", options: ["Thank you", "Please help me", "Good morning", "Goodbye"], correct: 1, feedback: "बहुत बढ़िया! Please help me सही है। (+20 XP)" }
       ],
       hindi: [
-        { title: "Topic 1: Hindi Varnmala", q: "हिंदी वर्णमाला में स्वर (Vowel) की पहचान करें:", options: ["क", "च", "अ", "म"], correct: 2, exp: "सही! 'अ' एक स्वर है।" },
-        { title: "Topic 2: Matrayen (मात्राएं)", q: "क अक्षर पर आ की मात्रा ('ा') लगाने से क्या बनता है?", options: ["कि", "कु", "का", "के"], correct: 2, exp: "सही! क + ा = का बनता है।" },
-        { title: "Topic 3: Shuddh Vyakaran", q: "किसी व्यक्ति या स्थान के नाम को व्याकरण में क्या कहते हैं?", options: ["संज्ञा (Noun)", "सर्वनाम", "क्रिया", "विशेषण"], correct: 0, exp: "सही! उसे संज्ञा कहते हैं।" }
+        { title: "Level 1: Swar & Vyanjan", exp: "हिंदी वर्णमाला में स्वर (Vowels) और व्यंजन (Consonants) होते हैं।", q: "इनमें से कौन-सा स्वर (Vowel) है?", options: ["क", "च", "अ", "म"], correct: 2, feedback: "सही! 'अ' एक स्वर है। (+20 XP)" },
+        { title: "Level 2: Matrayen", exp: "क अक्षर पर आ की मात्रा ('ा') लगाने से 'का' बनता है।", q: "क + ा से क्या बनेगा?", options: ["कि", "कु", "का", "के"], correct: 2, feedback: "शानदार! 'का' बनता है। (+20 XP)" },
+        { title: "Level 3: Sangya (Noun)", exp: "किसी व्यक्ति, वस्तु या स्थान के नाम को संज्ञा कहते हैं।", q: "इनमें से कौन-सा शब्द किसी स्थान (Place) का नाम है?", options: ["किताब", "दिल्ली", "पेन", "कुर्सी"], correct: 1, feedback: "बिल्कुल सही! दिल्ली एक स्थान का नाम है। (+20 XP)" }
       ],
       maths: [
-        { title: "Topic 1: Basic Counting", q: "यदि आपके पास 3 पेंसिल हैं और 2 और मिल गईं, तो कुल कितनी हुईं?", options: ["4", "5", "6", "3"], correct: 1, exp: "सही! 3 + 2 = 5 होता है।" },
-        { title: "Topic 2: Multiplication Tables", q: "2 का पहाड़ा 3 बार पढ़ने पर कितना आता है? (2 × 3)", options: ["4", "5", "6", "8"], correct: 2, exp: "सही! 2 तिया 6 होता है।" },
-        { title: "Topic 3: Daily Percentage", q: "₹100 की चीज़ पर 10% छूट मिलने पर कितने रुपये कम होंगे?", options: ["₹5", "₹10", "₹20", "₹50"], correct: 1, exp: "सही! ₹100 का 10% ₹10 होता है।" }
+        { title: "Level 1: Basic Counting", exp: "जोड़ का मतलब चीज़ों को एक साथ गिनना होता है।", q: "यदि आपके पास 3 पेंसिल हैं और 2 और मिल गईं, तो कुल कितनी हुईं?", options: ["4", "5", "6", "3"], correct: 1, feedback: "सही! 3 + 2 = 5 होता है। (+20 XP)" },
+        { title: "Level 2: Multiplication Tables", exp: "पहाड़े याद रखने से गणना बहुत तेज़ हो जाती है।", q: "2 का पहाड़ा 3 बार पढ़ने पर कितना आता है? (2 × 3)", options: ["4", "5", "6", "8"], correct: 2, feedback: "बिल्कुल सही! 2 तिया 6 होता है। (+20 XP)" },
+        { title: "Level 3: Daily Percentage", exp: "किसी भी संख्या का 10% निकालने के लिए आख़िरी शून्य हटा देते हैं।", q: "₹100 की चीज़ पर 10% छूट मिलने पर कितने रुपये कम होंगे?", options: ["₹5", "₹10", "₹20", "₹50"], correct: 1, feedback: "शाबाश! ₹10 होता है। (+20 XP)" }
+      ],
+      career: [
+        { title: "Level 1: Railway & SSC Clerks", exp: "10वीं और 12वीं के बाद रेलवे (RRB NTPC) और SSC CHSL क्लर्क की सरकारी नौकरी पा सकते हैं।", q: "रेलवे क्लर्क परीक्षा के लिए न्यूनतम योग्यता क्या है?", options: ["8वीं पास", "12वीं पास", "इंजीनियरिंग डिग्री", "कोई नहीं"], correct: 1, feedback: "सही! 12वीं पास विद्यार्थी इसके योग्य हैं। (+20 XP)" },
+        { title: "Level 2: Polytechnic Diploma", exp: "10वीं के बाद महंगे बी.टेक के बजाय राजकीय पॉलिटेक्निक से 3 साल का डिप्लोमा करें।", q: "पॉलिटेक्निक डिप्लोमा कितने साल का होता है?", options: ["1 साल", "2 साल", "3 साल", "5 साल"], correct: 2, feedback: "बिल्कुल सही! 3 साल का कोर्स होता है। (+20 XP)" },
+        { title: "Level 3: Banking & Corporate QA", exp: "अगर आपकी अंग्रेजी और कंप्यूटर स्किल्स अच्छी हैं, तो बैकिंग और क्वालिटी एनालिस्ट में बेहतरीन करियर है।", q: "कॉर्पोरेट जॉब्स के लिए कौन-सी स्किल सबसे ज़रूरी है?", options: ["सिर्फ रट्टा मारना", "English Speaking & Basic Computer", "खेती करना", "ड्राइविंग"], correct: 1, feedback: "शानदार! भाषा और कंप्यूटर स्किल्स सबसे ज़रूरी हैं। (+20 XP)" }
       ]
     };
 
     // ================= INITIALIZATION =================
     window.onload = () => {
-      evaluateSession();
-      runFocusTimer();
+      if (currentUser) {
+        document.getElementById('loginModal').classList.add('hidden');
+        document.getElementById('mainAppContainer').classList.remove('hidden');
+        renderDashboardUI();
+      } else {
+        document.getElementById('loginModal').classList.remove('hidden');
+      }
     };
 
-    function evaluateSession() {
-      const modal = document.getElementById('authGatewayModal');
-      const container = document.getElementById('coreAppContainer');
-      const membersSec = document.getElementById('familyMembersSection');
-      const list = document.getElementById('familyMembersList');
-
-      if (cloudDB.students.length === 0) {
-        modal.classList.remove('hidden');
-        container.classList.add('hidden');
-        membersSec.classList.add('hidden');
-      } else {
-        modal.classList.remove('hidden');
-        container.classList.add('hidden');
-        membersSec.classList.remove('hidden');
-
-        list.innerHTML = '';
-        cloudDB.students.forEach(st => {
-          const btn = document.createElement('button');
-          btn.className = "w-full text-left bg-blue-50/70 hover:bg-blue-100 border border-blue-200 p-4 rounded-2xl font-bold text-blue-950 flex items-center justify-between transition text-sm shadow-sm";
-          btn.innerHTML = `
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center text-sm font-extrabold shadow">👶</div>
-              <div>
-                <div class="text-sm font-extrabold">${st.name}</div>
-                <div class="text-xs text-blue-700 font-normal">कक्षा: ${st.classLevel} • ⭐ ${st.totalXP || 0} XP</div>
-              </div>
-            </div>
-            <span class="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-xl font-bold">लॉगिन करें →</span>
-          `;
-          btn.onclick = () => activateStudent(st.id);
-          list.appendChild(btn);
-        });
-      }
+    function openLoginModal() {
+      document.getElementById('loginModal').classList.remove('hidden');
     }
 
-    function registerNewChild() {
-      const name = document.getElementById('inputChildName').value.trim();
-      const classLevel = document.getElementById('inputChildClass').value;
-      if (!name) {
-        alert("कृपया छात्र का नाम दर्ज करें।");
+    function submitLogin() {
+      const name = document.getElementById('loginName').value.trim();
+      const credential = document.getElementById('loginCredential').value.trim();
+      const classLevel = document.getElementById('loginClass').value;
+
+      if (!name || !credential) {
+        alert("कृपया अपना नाम और मोबाइल नंबर/ईमेल दर्ज करें।");
         return;
       }
 
-      const newStudent = {
-        id: 'st_' + Date.now(),
+      currentUser = {
         name,
+        credential,
         classLevel,
-        totalXP: 0,
-        progress: { english: 0, hindi: 0, maths: 0 }
+        xp: 120,
+        streak: 3,
+        progress: { english: 0, hindi: 0, maths: 0, career: 0 }
       };
 
-      cloudDB.students.push(newStudent);
-      persistDatabase();
-      activateStudent(newStudent.id);
+      localStorage.setItem('shiksha_duo_user', JSON.stringify(currentUser));
+      document.getElementById('loginModal').classList.add('hidden');
+      document.getElementById('mainAppContainer').classList.remove('hidden');
+      renderDashboardUI();
     }
 
-    function activateStudent(id) {
-      currentStudentId = id;
-      localStorage.setItem('shiksha_active_student', id);
-      document.getElementById('authGatewayModal').classList.add('hidden');
-      document.getElementById('coreAppContainer').classList.remove('hidden');
-      renderDashboard();
+    function renderDashboardUI() {
+      document.getElementById('badgeUser').innerText = currentUser.name;
+      document.getElementById('xpCount').innerText = `${currentUser.xp} XP`;
+      document.getElementById('streakCount').innerText = `${currentUser.streak} Days Streak`;
+
+      document.getElementById('progEnglish').innerText = `${currentUser.progress.english} / 3 Levels`;
+      document.getElementById('progHindi').innerText = `${currentUser.progress.hindi} / 3 Levels`;
+      document.getElementById('progMaths').innerText = `${currentUser.progress.maths} / 3 Levels`;
+      document.getElementById('progCareer').innerText = `${currentUser.progress.career} / 3 Roadmaps`;
     }
 
-    function openGateway() {
-      evaluateSession();
-    }
-
-    function getActiveStudent() {
-      return cloudDB.students.find(s => s.id == currentStudentId) || cloudDB.students[0];
-    }
-
-    function persistDatabase() {
-      localStorage.setItem('shiksha_enterprise_db', JSON.stringify(cloudDB));
-    }
-
-    // ================= DASHBOARD RENDER =================
-    function renderDashboard() {
-      const student = getActiveStudent();
-      if (!student) return;
-
-      document.getElementById('navActiveChildBadge').innerText = `${student.name} (${student.classLevel})`;
-      document.getElementById('navTotalXP').innerText = `${student.totalXP || 0} XP`;
-
-      document.getElementById('cardProgressEnglish').innerText = `${student.progress.english} / 3 Topics`;
-      document.getElementById('cardProgressHindi').innerText = `${student.progress.hindi} / 3 Topics`;
-      document.getElementById('cardProgressMaths').innerText = `${student.progress.maths} / 3 Topics`;
-    }
-
-    function launchSubject(subject) {
-      activeSubject = subject;
-      const student = getActiveStudent();
-      topicIndex = student.progress[subject] || 0;
-      if (topicIndex >= 3) topicIndex = 2; // cap
+    // ================= SUBJECT & LESSON FLOW =================
+    function openSubject(subject) {
+      currentSubject = subject;
+      currentLevelIdx = currentUser.progress[subject] || 0;
+      if (currentLevelIdx >= 3) currentLevelIdx = 2;
 
       document.getElementById('viewDashboard').classList.add('hidden');
-      document.getElementById('viewParentHub').classList.add('hidden');
       document.getElementById('viewPractice').classList.remove('hidden');
 
-      const titles = { english: "English (अंग्रेज़ी)", hindi: "Hindi (हिन्दी व्याकरण)", maths: "Maths (गणित)" };
-      document.getElementById('practiceHeaderTitle').innerText = titles[subject];
-      renderPracticeTopic();
+      const titles = { english: "English Speaking", hindi: "Hindi Vyakaran", maths: "Maths Foundation", career: "Career Counselling" };
+      document.getElementById('practiceCategoryBadge').innerText = titles[subject];
+      loadLessonContent();
     }
 
     function returnToDashboard() {
       document.getElementById('viewPractice').classList.add('hidden');
-      document.getElementById('viewParentHub').classList.add('hidden');
       document.getElementById('viewDashboard').classList.remove('hidden');
-      renderDashboard();
+      renderDashboardUI();
     }
 
-    // ================= TOPIC & QUIZ ENGINE =================
-    function renderPracticeTopic() {
-      const topics = curriculumData[activeSubject];
-      const item = topics[topicIndex];
+    function loadLessonContent() {
+      const list = database[currentSubject];
+      const item = list[currentLevelIdx];
 
-      document.getElementById('practiceTopicTitle').innerText = item.title;
-      document.getElementById('practiceExplanation').innerText = item.explanation || "इस टॉपिक के नियम को समझकर नीचे दिए गए सवाल का सही उत्तर दें।";
-      document.getElementById('practiceQuestion').innerText = item.q;
-      document.getElementById('practiceResultBox').classList.add('hidden');
-      
-      const nextBtn = document.getElementById('btnNextTopic');
+      document.getElementById('lessonTitle').innerText = item.title;
+      document.getElementById('lessonExplanation').innerText = item.exp;
+      document.getElementById('aiGuidanceText').innerText = `फॉक्सी शिक्षक: ${item.title} का अभ्यास करें!`;
+      document.getElementById('quizQuestion').innerText = item.q;
+      document.getElementById('quizFeedbackBox').classList.add('hidden');
+
+      const nextBtn = document.getElementById('btnNextLevel');
       nextBtn.disabled = true;
-      nextBtn.className = "text-xs font-extrabold text-white bg-slate-300 px-6 py-3 rounded-xl transition cursor-not-allowed shadow-sm";
+      nextBtn.className = "bg-slate-300 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-none cursor-not-allowed transition";
 
-      const grid = document.getElementById('practiceOptions');
+      const grid = document.getElementById('quizOptions');
       grid.innerHTML = '';
       item.options.forEach((opt, idx) => {
-        const b = document.createElement('button');
-        b.className = "text-left font-bold p-4 rounded-2xl border border-slate-300 hover:border-blue-600 hover:bg-blue-50 transition text-sm text-slate-800 shadow-sm";
-        b.innerText = `${idx + 1}. ${opt}`;
-        b.onclick = () => verifyQuiz(idx, item.correct, item.exp);
-        grid.appendChild(b);
+        const btn = document.createElement('button');
+        btn.className = "text-left font-bold p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition text-sm text-slate-800 shadow-sm bg-white";
+        btn.innerText = `${idx + 1}. ${opt}`;
+        btn.onclick = () => checkQuizOption(idx, item.correct, item.feedback);
+        grid.appendChild(btn);
       });
     }
 
-    function verifyQuiz(selected, correct, explanation) {
-      const box = document.getElementById('practiceResultBox');
+    function checkQuizOption(selected, correct, feedbackText) {
+      const box = document.getElementById('quizFeedbackBox');
       box.classList.remove('hidden');
-      const nextBtn = document.getElementById('btnNextTopic');
+      const nextBtn = document.getElementById('btnNextLevel');
 
       if (selected === correct) {
-        box.className = "p-4 rounded-2xl border bg-emerald-50 border-emerald-300 text-emerald-950 text-sm";
-        box.innerHTML = `🎉 <strong>बिल्कुल सही! शानदार प्रदर्शन। (+20 XP)</strong><br>${explanation}`;
+        box.className = "p-4 rounded-2xl border-2 bg-emerald-50 border-emerald-400 text-emerald-950 text-sm font-bold shadow-sm";
+        box.innerHTML = `🎉 <strong>बिल्कुल सही जवाब!</strong><br>${feedbackText}`;
         
+        currentUser.xp += 20;
+        localStorage.setItem('shiksha_duo_user', JSON.stringify(currentUser));
+        document.getElementById('xpCount').innerText = `${currentUser.xp} XP`;
+
         nextBtn.disabled = false;
-        nextBtn.className = "text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 px-6 py-3 rounded-xl shadow-md transition cursor-pointer";
+        nextBtn.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-lg duo-btn-green transition cursor-pointer";
       } else {
-        box.className = "p-4 rounded-2xl border bg-rose-50 border-rose-300 text-rose-950 text-sm";
-        box.innerHTML = `❌ <strong>उत्तर सही नहीं है। पुनः प्रयास करें:</strong><br>${explanation}`;
+        box.className = "p-4 rounded-2xl border-2 bg-rose-50 border-rose-300 text-rose-950 text-sm font-bold shadow-sm";
+        box.innerHTML = `❌ <strong>उत्तर सही नहीं है। फॉक्सी के साथ दोबारा प्रयास करें!</strong>`;
       }
     }
 
-    function unlockNextTopic() {
-      const student = getActiveStudent();
-      if (topicIndex + 1 > student.progress[activeSubject]) {
-        student.progress[activeSubject] = topicIndex + 1;
-        student.totalXP = (student.totalXP || 0) + 20;
-        persistDatabase();
+    function nextLevelAction() {
+      if (currentLevelIdx + 1 > currentUser.progress[currentSubject]) {
+        currentUser.progress[currentSubject] = currentLevelIdx + 1;
+        localStorage.setItem('shiksha_duo_user', JSON.stringify(currentUser));
       }
 
-      topicIndex++;
-      if (topicIndex >= curriculumData[activeSubject].length) {
-        alert("🎉 बधाई हो! आपने इस विषय के सभी टॉपिक्स सफलतापूर्वक पूरे कर लिए हैं!");
+      currentLevelIdx++;
+      if (currentLevelIdx >= database[currentSubject].length) {
+        alert("🎉 बधाई हो! आपने इस विषय के सभी स्तर पूरे कर लिए हैं!");
         returnToDashboard();
       } else {
-        renderPracticeTopic();
+        loadLessonContent();
       }
     }
 
-    function speakAITutor() {
-      const item = curriculumData[activeSubject][topicIndex];
-      const text = `${item.title}. ${item.explanation || ''} सवाल है: ${item.q}`;
+    function speakLessonAudio() {
+      const item = database[currentSubject][currentLevelIdx];
+      const text = `${item.title}. ${item.exp}. सवाल है: ${item.q}`;
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text);
-        u.lang = activeSubject === 'english' ? 'en-IN' : 'hi-IN';
+        u.lang = currentSubject === 'english' ? 'en-IN' : 'hi-IN';
         window.speechSynthesis.speak(u);
       }
     }
 
-    function startMicRecognition() {
+    function startVoiceInput() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert("माइक्रोफ़ोन इस ब्राउज़र में उपलब्ध नहीं है।");
+        alert("माइक्रोफ़ोन इस ब्राउज़र में समर्थित नहीं है।");
         return;
       }
       const rec = new SpeechRecognition();
-      rec.lang = activeSubject === 'english' ? 'en-IN' : 'hi-IN';
-      const micBtn = document.getElementById('micButton');
-      micBtn.classList.add('pulse-mic');
-      micBtn.innerText = "🎙️ सुन रहे हैं...";
-
+      rec.lang = currentSubject === 'english' ? 'en-IN' : 'hi-IN';
+      alert("🎙️ फॉक्सी सुन रहा है... साफ़ आवाज़ में बोलिए!");
       rec.onresult = (e) => {
-        alert(`शानदार! आपने स्पष्ट बोला: "${e.results[0][0].transcript}"`);
-      };
-      rec.onend = () => {
-        micBtn.classList.remove('pulse-mic');
-        micBtn.innerText = "🎙️ बोलकर चेक करें (Mic)";
+        alert(`शानदार! आपने बोला: "${e.results[0][0].transcript}"`);
       };
       rec.start();
-    }
-
-    // ================= PARENT HUB & ANALYTICS =================
-    function openParentDashboard() {
-      document.getElementById('viewDashboard').classList.add('hidden');
-      document.getElementById('viewPractice').classList.add('hidden');
-      document.getElementById('viewParentHub').classList.remove('hidden');
-
-      const container = document.getElementById('parentChildrenCardsContainer');
-      container.innerHTML = '';
-
-      cloudDB.students.forEach(st => {
-        const div = document.createElement('div');
-        div.className = "bg-white p-5 rounded-2xl border border-amber-200 shadow-sm space-y-3";
-        div.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="font-extrabold text-slate-900 text-base">👶 ${st.name} <span class="text-xs text-slate-500 font-normal">(${st.classLevel})</span></span>
-            <span class="bg-amber-100 text-amber-900 font-extrabold text-xs px-3 py-1 rounded-full">⭐ ${st.totalXP || 0} XP</span>
-          </div>
-          <div class="grid grid-cols-3 gap-2.5 text-xs font-extrabold">
-            <div class="bg-blue-50 text-blue-900 p-2.5 rounded-xl border border-blue-100">English: ${st.progress.english}/3 Topics</div>
-            <div class="bg-emerald-50 text-emerald-900 p-2.5 rounded-xl border border-emerald-100">Hindi: ${st.progress.hindi}/3 Topics</div>
-            <div class="bg-amber-50 text-amber-900 p-2.5 rounded-xl border border-amber-100">Maths: ${st.progress.maths}/3 Topics</div>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function dispatchWhatsAppReport() {
-      const phone = document.getElementById('parentWhatsAppInput').value.replace(/\D/g, '');
-      let report = "🇮🇳 *Shiksha Setu AI - Enterprise Progress Report*\n\n";
-      cloudDB.students.forEach(st => {
-        report += `👶 *${st.name}* (${st.classLevel}) | ⭐ ${st.totalXP || 0} XP\n  - English: ${st.progress.english}/3\n  - Hindi: ${st.progress.hindi}/3\n  - Maths: ${st.progress.maths}/3\n\n`;
-      });
-      const encoded = encodeURIComponent(report);
-      const url = phone.length >= 10 ? `https://wa.me/91${phone.slice(-10)}?text=${encoded}` : `https://wa.me/?text=${encoded}`;
-      window.open(url, '_blank');
-    }
-
-    function runFocusTimer() {
-      setInterval(() => {
-        if (focusSeconds > 0) {
-          focusSeconds--;
-          const m = String(Math.floor(focusSeconds / 60)).padStart(2, '0');
-          const s = String(focusSeconds % 60).padStart(2, '0');
-          const el = document.getElementById('navFocusTimer');
-          if (el) el.innerText = `${m}:${s}`;
-        }
-      }, 1000);
     }
   </script>
 </body>
