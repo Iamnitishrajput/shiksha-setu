@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shiksha Setu AI | हर बच्चे के लिए मुफ़्त AI ट्यूटर और करियर गाइड</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+      background-color: #f8fafc;
+    }
+    .tab-active {
+      background-color: #1e40af;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+    }
+    .pulse-mic {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1.04); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+  <!-- TOP HEADER & 1-HOUR STRICT FOCUS TIMER -->
+  <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="bg-amber-400 text-blue-950 font-extrabold px-2.5 py-0.5 rounded text-xs uppercase tracking-wider">Zero-Level AI</span>
+          <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">Shiksha Setu AI 🇮🇳</h1>
+        </div>
+        <p class="text-xs text-blue-200 mt-0.5">English Speaking • Zero-Level Maths & Hindi • Career Roadmap</p>
+      </div>
+
+      <!-- Strict 1-Hour Study Timer -->
+      <div class="flex items-center gap-3 bg-blue-950/80 border border-blue-700 px-3.5 py-2 rounded-xl">
+        <div>
+          <div class="text-[11px] text-blue-300 uppercase font-semibold">Daily 1-Hr Strict Focus</div>
+          <div id="timerDisplay" class="text-lg md:text-xl font-mono font-extrabold text-amber-400">60:00</div>
+        </div>
+        <button id="timerBtn" onclick="toggleTimer()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition">
+          ▶ Start Study
+        </button>
+      </div>
+    </div>
+
+    <!-- STUDENT BAR -->
+    <div class="bg-blue-800/90 border-t border-blue-700/80 px-4 py-2">
+      <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs md:text-sm">
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="font-semibold text-blue-200">विद्यार्थी का नाम (Student):</label>
+          <input id="studentName" type="text" value="Aarav" onchange="saveProgress()" class="bg-blue-950 text-white font-bold px-2.5 py-1 rounded border border-blue-600 w-32 focus:outline-none focus:border-amber-400" />
+          <select id="studentClass" onchange="changeClassLevel()" class="bg-blue-950 text-amber-300 font-bold px-2.5 py-1 rounded border border-blue-600 focus:outline-none">
+            <option value="6-8">Class 6–8 (Foundation)</option>
+            <option value="9-10">Class 9–10 (Board & Base)</option>
+            <option value="11-12">Class 11–12 (Career Ready)</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-4 text-xs font-bold">
+          <span class="text-emerald-300">🗣️ English: <span id="engScoreBadge">0</span>/5</span>
+          <span class="text-amber-300">➗ Maths & Hindi: <span id="mathScoreBadge">0</span>/5</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="max-w-5xl w-full mx-auto px-4 pt-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
+      <button onclick="switchTab('english')" id="tab-english" class="tab-active py-2.5 px-3 rounded-xl font-bold text-xs md:text-sm transition flex items-center justify-center gap-1.5">
+        <span>🗣️</span> English Speaking
+      </button>
+      <button onclick="switchTab('math')" id="tab-math" class="py-2.5 px-3 rounded-xl font-bold text-xs md:text-sm text-slate-600 hover:bg-slate-100 transition flex items-center justify-center gap-1.5">
+        <span>➗</span> Maths & Hindi Base
+      </button>
+      <button onclick="switchTab('career')" id="tab-career" class="py-2.5 px-3 rounded-xl font-bold text-xs md:text-sm text-slate-600 hover:bg-slate-100 transition flex items-center justify-center gap-1.5">
+        <span>🧭</span> Career Counselor
+      </button>
+      <button onclick="switchTab('parent')" id="tab-parent" class="py-2.5 px-3 rounded-xl font-bold text-xs md:text-sm text-amber-900 bg-amber-100 hover:bg-amber-200 transition flex items-center justify-center gap-1.5">
+        <span>👨‍👩‍👧</span> माता-पिता (Parent Mode)
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-5xl w-full mx-auto px-4 py-6 flex-1">
+
+    <!-- TAB 1: ENGLISH SPEAKING & HINDI BRIDGE -->
+    <section id="section-english" class="space-y-5">
+      <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-5 rounded-2xl shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-2.5 py-0.5 rounded">Daily Speaking Practice</span>
+          <h2 class="text-xl font-extrabold mt-1">बिना झिझक अंग्रेज़ी बोलना सीखें (Hindi-to-English Bridge)</h2>
+          <p class="text-xs md:text-sm text-blue-200 mt-1">पहले हिंदी में मतलब समझें, AI की आवाज़ सुनें, और फिर माइक दबाकर खुद बोलें।</p>
+        </div>
+        <div class="bg-white/10 px-4 py-2.5 rounded-xl text-right shrink-0">
+          <div class="text-xs text-blue-200">Sentence Progress</div>
+          <div id="engProgressText" class="text-lg font-extrabold text-amber-300">1 / 5</div>
+        </div>
+      </div>
+
+      <!-- Speaking Card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-5">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <span id="engCategory" class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full">Self Introduction & Confidence</span>
+          <span class="text-xs text-slate-400">Step-by-step Audio Tutor</span>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <div class="text-xs font-semibold text-slate-400 uppercase">1. हिंदी वाक्य (Meaning in Hindi):</div>
+            <p id="engHindiText" class="text-lg md:text-xl font-bold text-slate-700 mt-0.5">मेरा नाम आरव है और मैं हर दिन कुछ नया सीखना चाहता हूँ।</p>
+          </div>
+
+          <div class="bg-blue-50/70 border-l-4 border-blue-600 p-4 rounded-r-xl">
+            <div class="text-xs font-semibold text-blue-600 uppercase">2. Speak in English:</div>
+            <p id="engTargetText" class="text-xl md:text-2xl font-extrabold text-blue-950 mt-1">My name is Aarav and I want to learn something new every day.</p>
+            <p id="engPronunciation" class="text-xs md:text-sm text-slate-600 mt-2 font-medium">🔊 उच्चारण (Pronunciation): <span class="text-slate-900 font-semibold">माय नेम इज़ आरव एंड आई वांट टू लर्न समथिंग न्यू एवरी डे।</span></p>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-xl text-xs md:text-sm text-amber-950">
+            <strong>💡 Zero-Level Grammar Rule:</strong> <span id="engGrammarTip">जब हम अपनी किसी इच्छा या लक्ष्य की बात करते हैं, तो <b>"I want to + काम (Verb)"</b> का प्रयोग करते हैं।</span>
+          </div>
+        </div>
+
+        <!-- Audio & Mic Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+          <button onclick="speakCurrentEnglish()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition">
+            🔊 1. AI की आवाज़ सुनें (Listen)
+          </button>
+
+          <button id="micBtn" onclick="startSpeechRecognition()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition">
+            🎤 2. बोलकर चेक करें (Speak Now)
+          </button>
+
+          <button onclick="markEnglishPracticed()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition">
+            ✅ 3. मैंने 3 बार बोलकर अभ्यास किया
+          </button>
+        </div>
+
+        <!-- Speech Recognition Feedback Box -->
+        <div id="speechFeedbackBox" class="hidden p-4 rounded-xl border text-sm"></div>
+
+        <!-- Prev / Next Navigation -->
+        <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+          <button onclick="prevEnglish()" class="text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition">
+            ← पिछला वाक्य (Previous)
+          </button>
+          <button onclick="nextEnglish()" class="text-xs md:text-sm font-bold text-white px-5 py-2 rounded-lg bg-blue-900 hover:bg-blue-800 transition">
+            अगला वाक्य (Next Sentence) →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: ZERO-LEVEL MATHS & HINDI BASE -->
+    <section id="section-math" class="hidden space-y-5">
+      <div class="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-5 rounded-2xl shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-2.5 py-0.5 rounded">Zero-Level Foundation</span>
+          <h2 class="text-xl font-extrabold mt-1">Maths & Hindi Vyakaran (बिल्कुल बेसिक से)</h2>
+          <p class="text-xs md:text-sm text-emerald-100 mt-1">रटने की जगह नियम समझें। अगर बेसिक कमज़ोर है, तो यहाँ बिना किसी डर के स्टेप-बाय-स्टेप सीखें।</p>
+        </div>
+        <div class="bg-white/10 px-4 py-2.5 rounded-xl text-right shrink-0">
+          <div class="text-xs text-emerald-200">Questions Solved</div>
+          <div id="mathProgressText" class="text-lg font-extrabold text-amber-300">0 / 5</div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <span id="mathTopicBadge" class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">Maths • Daily Life Percentage</span>
+          <button onclick="speakMathConcept()" class="text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition">
+            🔊 हिंदी में नियम सुनें (Listen Explanation)
+          </button>
+        </div>
+
+        <!-- Zero-Level Concept Box -->
+        <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-1.5">
+          <div class="text-xs font-extrabold uppercase text-emerald-700">📘 Zero-Level Concept (सरल नियम):</div>
+          <p id="mathConceptText" class="text-sm md:text-base text-slate-800 font-medium leading-relaxed"></p>
+        </div>
+
+        <!-- Question -->
+        <div class="space-y-3">
+          <div class="text-xs font-bold uppercase text-slate-400">सवाल (Practice Question):</div>
+          <p id="mathQuestionText" class="text-lg md:text-xl font-extrabold text-slate-900"></p>
+
+          <!-- Options -->
+          <div id="mathOptionsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2"></div>
+        </div>
+
+        <!-- Step-by-Step Hint & Solution -->
+        <div id="mathFeedbackBox" class="hidden p-4 rounded-xl border text-sm space-y-1"></div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+          <button onclick="showMathHint()" class="text-xs md:text-sm font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 px-4 py-2 rounded-lg transition">
+            💡 स्टेप-बाय-स्टेप हिंट देखें (Show Step-by-Step)
+          </button>
+          <button onclick="nextMathQuestion()" class="text-xs md:text-sm font-bold text-white bg-emerald-700 hover:bg-emerald-800 px-5 py-2 rounded-lg transition">
+            अगला सवाल (Next Question) →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: CAREER COUNSELOR (10th / 12th ROADMAPS) -->
+    <section id="section-career" class="hidden space-y-5">
+      <div class="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-5 rounded-2xl shadow-md">
+        <span class="bg-white text-amber-900 text-xs font-extrabold px-2.5 py-0.5 rounded uppercase">First-Gen Career Guide</span>
+        <h2 class="text-xl font-extrabold mt-1">10वीं और 12वीं के बाद सही करियर और सरकारी/प्राइवेट नौकरी का रास्ता</h2>
+        <p class="text-xs md:text-sm text-amber-100 mt-1">कम खर्च में बेहतरीन करियर कैसे बनाएं? हर कार्ड पर <b>"🔊 माता-पिता को सुनाएं"</b> बटन दबाएं ताकि पूरा परिवार सही फैसला ले सके।</p>
+      </div>
+
+      <div id="careerCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- TAB 4: PARENT MODE (HINDI VOICE & WHATSAPP REPORT) -->
+    <section id="section-parent" class="hidden space-y-5">
+      <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-6 space-y-5 shadow-sm">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-amber-200 pb-4">
+          <div>
+            <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-2.5 py-1 rounded uppercase">अभिभावक कक्ष • Zero-Literacy Friendly</span>
+            <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 mt-2">नमस्ते माता-पिता जी 🙏 (Parent Audio Dashboard)</h2>
+            <p class="text-sm text-slate-700 mt-1">आपको खुद पढ़ाने या अंग्रेज़ी जानने की ज़रूरत नहीं है। बस नीचे पीला बटन दबाकर सुनें कि आज आपके बच्चे ने क्या सीखा।</p>
+          </div>
+        </div>
+
+        <!-- Giant Audio Button for Parents -->
+        <button onclick="speakParentReportHindi()" class="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-base md:text-lg py-5 px-6 rounded-2xl shadow-md flex items-center justify-center gap-3 transition transform active:scale-[0.99]">
+          <span class="text-2xl">🔊</span>
+          <span>आज की प्रोग्रेस रिपोर्ट हिंदी आवाज़ में सुनें (Tap to Listen in Hindi)</span>
+        </button>
+
+        <!-- Summary Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-amber-200">
+            <div class="text-xs text-slate-500 font-bold">आज का पढ़ाई समय (Focus Time)</div>
+            <div id="parentTimeStat" class="text-2xl font-extrabold text-blue-900 mt-1">0 मिनट</div>
+            <div class="text-xs text-emerald-700 mt-1">लक्ष्य: रोज़ 60 मिनट (1 घंटा)</div>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-amber-200">
+            <div class="text-xs text-slate-500 font-bold">अंग्रेज़ी बोलने का अभ्यास (English)</div>
+            <div id="parentEngStat" class="text-2xl font-extrabold text-blue-900 mt-1">0 / 5 वाक्य</div>
+            <div class="text-xs text-slate-600 mt-1">बोलकर अभ्यास किया</div>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-amber-200">
+            <div class="text-xs text-slate-500 font-bold">गणित और हिंदी बेसिक (Maths & Hindi)</div>
+            <div id="parentMathStat" class="text-2xl font-extrabold text-blue-900 mt-1">0 / 5 सवाल</div>
+            <div class="text-xs text-slate-600 mt-1">नियम के साथ हल किए</div>
+          </div>
+        </div>
+
+        <!-- WhatsApp Direct Report Card -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-3">
+          <h3 class="font-extrabold text-slate-900 text-base">📲 WhatsApp पर आज की रिपोर्ट भेजें (1-Click Parent Update)</h3>
+          <p class="text-xs md:text-sm text-slate-600">बच्चा रोज़ 1 घंटे की पढ़ाई पूरी करने के बाद यह रिपोर्ट सीधे माता-पिता या मेंटर के WhatsApp पर भेज सकता है:</p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input id="parentPhone" type="tel" placeholder="माता-पिता का WhatsApp नंबर (उदा. 9876543210)" class="flex-1 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-600" />
+            <button onclick="sendWhatsAppReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-6 py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm transition">
+              <span>💬</span> Send Report on WhatsApp
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-400 text-xs py-4 px-4 mt-8">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div><strong>Shiksha Setu AI</strong> — Empowering First-Generation Learners & Families across India 🇮🇳</div>
+      <div>100% Free • Works on Mobile & Laptop</div>
+    </div>
+  </footer>
+
+  <script>
+    // ================= STATE & DATA =================
+    let engCompleted = new Set();
+    let mathCompleted = new Set();
+    let currentEngIndex = 0;
+    let currentMathIndex = 0;
+
+    // Timer state (60 mins = 3600 seconds)
+    let timerSeconds = 3600;
+    let timerRunning = false;
+    let timerInterval = null;
+    let studiedMinutes = 0;
+
+    const englishLessons = [
+      {
+        category: "1. Self Introduction (अपना परिचय)",
+        hindi: "मेरा नाम आरव है और मैं हर दिन कुछ नया सीखना चाहता हूँ।",
+        english: "My name is Aarav and I want to learn something new every day.",
+        pronounce: "माय नेम इज़ आरव एंड आई वांट टू लर्न समथिंग न्यू एवरी डे।",
+        tip: "जब हम अपनी किसी इच्छा या लक्ष्य की बात करते हैं, तो 'I want to + काम (Verb)' का प्रयोग करते हैं।"
+      },
+      {
+        category: "2. Classroom Confidence (क्लास में बिना डरे पूछना)",
+        hindi: "सर, क्या आप कृपया इस सवाल को एक बार फिर से समझा सकते हैं?",
+        english: "Sir, could you please explain this question once again?",
+        pronounce: "सर, कुड यू प्लीज़ एक्सप्लेन दिस क्वेश्चन वन्स अगेन?",
+        tip: "किसी से विनम्रता (respect) से मदद मांगने के लिए 'Could you please...' सबसे अच्छा तरीका है।"
+      },
+      {
+        category: "3. Family & Hard Work (परिवार और मेहनत)",
+        hindi: "मेरे माता-पिता बहुत मेहनत करते हैं और मैं उन्हें गर्व महसूस कराऊंगा।",
+        english: "My parents work very hard and I will make them proud.",
+        pronounce: "माय पेरेंट्स वर्क वेरी हार्ड एंड आई विल मेक देम प्राउड।",
+        tip: "भविष्य के पक्के वादे के लिए 'I will + Verb' का उपयोग किया जाता है।"
+      },
+      {
+        category: "4. Job Interview Readiness (इंटरव्यू और करियर)",
+        hindi: "मैं एक तेज़ सीखने वाला विद्यार्थी हूँ और मुझे टीम के साथ काम करना पसंद है।",
+        english: "I am a quick learner and I enjoy working with a team.",
+        pronounce: "आई एम अ क्विक लर्नर एंड आई एन्जॉय वर्किंग विद अ टीम।",
+        tip: "'Quick learner' का मतलब है वह इंसान जो कोई भी नया काम जल्दी सीख लेता है।"
+      },
+      {
+        category: "5. Daily Discipline (रोज़ की आदत)",
+        hindi: "मैं अपने भविष्य को बेहतर बनाने के लिए रोज़ एक घंटा अभ्यास करता हूँ।",
+        english: "I practice for one hour every day to build a better future.",
+        pronounce: "आई प्रैक्टिस फॉर वन आर एवरी डे टू बिल्ड अ बेटर फ्यूचर।",
+        tip: "ध्यान दें: 'Hour' में 'H' साइलेंट होता है, इसे 'आर' बोला जाता है, 'हावर' नहीं।"
+      }
+    ];
+
+    const mathHindiQuestions = [
+      {
+        topic: "Maths • Daily Life Percentage (प्रतिशत का खेल)",
+        concept: "किसी भी संख्या का 10% निकालने के लिए बस आख़िरी का एक शून्य (0) हटा दें! जैसे ₹500 का 10% = ₹50 होता है। और 20% का मतलब 10% का दोगुना!",
+        question: "अगर एक किताब की कीमत ₹400 है और दुकानदार उस पर 20% की छूट (Discount) देता है, तो आपको कितने रुपये की बचत होगी?",
+        options: ["₹40", "₹80", "₹60", "₹100"],
+        correct: 1,
+        explanation: "₹400 का 10% = ₹40 होता है। इसलिए 20% = ₹40 × 2 = ₹80 की बचत होगी!"
+      },
+      {
+        topic: "Maths • Unitary Method (एकिक नियम - रोज़ का हिसाब)",
+        concept: "जब कई चीज़ों की कीमत दी हो, तो पहले 1 चीज़ की कीमत निकालें (भाग देकर), और फिर जितनी चीज़ें चाहिए उससे गुणा (Multiply) करें।",
+        question: "अगर 5 कॉपियों की कीमत ₹150 है, तो ऐसी ही 8 कॉपियों की कीमत कितनी होगी?",
+        options: ["₹200", "₹220", "₹240", "₹250"],
+        correct: 2,
+        explanation: "1 कॉपी की कीमत = 150 ÷ 5 = ₹30। इसलिए 8 कॉपियों की कीमत = ₹30 × 8 = ₹240।"
+      },
+      {
+        topic: "Hindi Vyakaran • शुद्ध वाक्य और औपचारिक भाषा",
+        concept: "सरकारी फॉर्म, प्रार्थना पत्र (Application) और इंटरव्यू में सही हिंदी व्याकरण और संज्ञा/सर्वनाम की पहचान बहुत ज़रूरी है।",
+        question: "इनमें से कौन-सा वाक्य व्याकरण की दृष्टि से बिल्कुल शुद्ध है?",
+        options: [
+          "मेरे को कल स्कूल जाना है।",
+          "मुझे कल विद्यालय जाना है।",
+          "मैं कल स्कूल को जाना है।",
+          "हमको कल स्कूल जाने का है।"
+        ],
+        correct: 1,
+        explanation: "'मेरे को' बोलचाल की अशुद्ध भाषा है। सही और मानक हिंदी वाक्य है: 'मुझे कल विद्यालय जाना है।'"
+      },
+      {
+        topic: "Maths • Simple Interest (साधारण ब्याज - बैंक और बचत)",
+        concept: "साधारण ब्याज का सीधा नियम है: (मूलधन × दर × समय) ÷ 100। यानी हर ₹100 पर एक साल में जितना ब्याज मिलता है, उसे दर (Rate) कहते हैं।",
+        question: "अगर आप बैंक में ₹2,000 जमा करते हैं और बैंक सालाना 10% ब्याज देता है, तो 2 साल में आपको कुल कितना ब्याज मिलेगा?",
+        options: ["₹200", "₹300", "₹400", "₹500"],
+        correct: 2,
+        explanation: "1 साल का ब्याज = ₹2000 का 10% = ₹200। तो 2 साल का ब्याज = ₹200 × 2 = ₹400।"
+      },
+      {
+        topic: "Hindi Vyakaran • मुहावरा और अर्थ (सरकारी परीक्षा विशेष)",
+        concept: "स्कूल और सभी प्रतियोगी परीक्षाओं (SSC, Railway, Police) में हिंदी मुहावरों का सही अर्थ पूछा जाता है।",
+        question: "'आकाश-पाताल एक करना' मुहावरे का सही अर्थ क्या है?",
+        options: [
+          "आसमान की तरफ देखना",
+          "बहुत अधिक और कठिन परिश्रम करना",
+          "बिना सोचे-समझे काम करना",
+          "झूठा वादा करना"
+        ],
+        correct: 1,
+        explanation: "'आकाश-पाताल एक करना' का अर्थ है अपने लक्ष्य को पाने के लिए जी-तोड़ और कठिन मेहनत करना।"
+      }
+    ];
+
+    const careerPaths = [
+      {
+        title: "1. रेलवे और SSC सरकारी क्लर्क/असिस्टेंट (RRB NTPC / SSC CHSL)",
+        eligibility: "योग्यता: 12वीं पास (किसी भी स्ट्रीम से - Arts, Commerce, Science)",
+        cost: "तैयारी का खर्च: लगभग ₹0 से ₹500 (घर बैठे ऑनलाइन)",
+        salary: "शुरुआती वेतन: ₹28,000 – ₹45,000 प्रतिमाह + सरकारी सुविधाएं",
+        roadmap: "इसमें Maths (दसवीं स्तर), Reasoning, General Awareness और कंप्यूटर टाइपिंग पूछी जाती है। अगर आप रोज़ 1-2 घंटे बेसिक गणित और टाइपिंग का अभ्यास करें, तो 12वीं के तुरंत बाद पक्की सरकारी नौकरी पा सकते हैं।"
+      },
+      {
+        title: "2. राजकीय पॉलिटेक्निक डिप्लोमा / ITI (Technical Engineer Path)",
+        eligibility: "योग्यता: 10वीं पास (Maths और Science के साथ)",
+        cost: "सरकारी कॉलेज फीस: केवल ₹3,000 – ₹8,000 प्रति वर्ष",
+        salary: "शुरुआती वेतन: ₹20,000 – ₹40,000 (Junior Engineer / PSU / Private Tech)",
+        roadmap: "महंगे प्राइवेट बी.टेक (B.Tech) में लाखों खर्च करने के बजाय 10वीं के बाद सरकारी पॉलिटेक्निक से 3 साल का डिप्लोमा (Civil, Electrical, CS) करें। इसके बाद सीधे रेलवे/SSC में Junior Engineer (JE) बन सकते हैं।"
+      },
+      {
+        title: "3. बैंकिंग, फाइनेंस और कॉर्पोरेट क्वालिटी एनालिस्ट (Banking & Corporate QA)",
+        eligibility: "योग्यता: 12वीं पास / ग्रेजुएशन (BA / B.Com / B.Sc - IGNOU या रेगुलर से)",
+        cost: "तैयारी का खर्च: बहुत कम (English Speaking + कंप्यूटर बेसिक्स)",
+        salary: "शुरुआती वेतन: ₹22,000 – ₹50,000 प्रतिमाह",
+        roadmap: "अगर आपकी English Speaking, हिंदी संवाद और Excel अच्छी है, तो आप बड़े बैंकों (HDFC, ICICI) में ऑफिसर, टीम लीडर या Quality Analyst बन सकते हैं और साथ में सरकारी बैंक (IBPS Clerk/PO) की परीक्षा दे सकते हैं।"
+      },
+      {
+        title: "4. पैरामेडिकल, नर्सिंग और शिक्षण (D.El.Ed / Nursing / Healthcare)",
+        eligibility: "योग्यता: 12वीं पास",
+        cost: "सरकारी संस्थान से बहुत कम फीस + छात्रवृत्ति (Scholarship)",
+        salary: "शुरुआती वेतन: ₹25,000 – ₹55,000 प्रतिमाह",
+        roadmap: "12वीं के बाद सरकारी DIET से 2 साल का D.El.Ed करके प्राइमरी सरकारी शिक्षक (CTET के ज़रिए) बन सकते हैं, या सरकारी अस्पताल से नर्सिंग/लैब टेक्नीशियन कोर्स करके 100% रोज़गार पा सकते हैं।"
+      }
+    ];
+
+    // ================= SPEECH ENGINE (100% FREE BROWSER API) =================
+    function speakText(text, lang = 'en-IN') {
+      if (!('speechSynthesis' in window)) {
+        alert("आपके ब्राउज़र में ऑडियो सपोर्ट नहीं है। कृपया Chrome का उपयोग करें।");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      utterance.rate = 0.92;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // ================= TAB NAVIGATION =================
+    function switchTab(tab) {
+      ['english', 'math', 'career', 'parent'].forEach(t => {
+        document.getElementById('section-' + t).classList.add('hidden');
+        const btn = document.getElementById('tab-' + t);
+        btn.classList.remove('tab-active');
+      });
+      document.getElementById('section-' + tab).classList.remove('hidden');
+      document.getElementById('tab-' + tab).classList.add('tab-active');
+      updateParentDashboard();
+    }
+
+    // ================= ENGLISH SPEAKING MODULE =================
+    function renderEnglishCard() {
+      const studentName = document.getElementById('studentName').value.trim() || 'Aarav';
+      const item = englishLessons[currentEngIndex];
+      document.getElementById('engCategory').innerText = item.category;
+      document.getElementById('engHindiText').innerText = item.hindi.replace('आरव', studentName);
+      document.getElementById('engTargetText').innerText = item.english.replace('Aarav', studentName);
+      document.getElementById('engPronunciation').innerHTML = `🔊 उच्चारण (Pronunciation): <span class="text-slate-900 font-semibold">${item.pronounce.replace('आरव', studentName)}</span>`;
+      document.getElementById('engGrammarTip').innerText = item.tip;
+      document.getElementById('engProgressText').innerText = `${currentEngIndex + 1} / ${englishLessons.length}`;
+      document.getElementById('speechFeedbackBox').classList.add('hidden');
+    }
+
+    function speakCurrentEnglish() {
+      const text = document.getElementById('engTargetText').innerText;
+      speakText(text, 'en-IN');
+    }
+
+    function startSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const feedbackBox = document.getElementById('speechFeedbackBox');
+      const micBtn = document.getElementById('micBtn');
+
+      if (!SpeechRecognition) {
+        feedbackBox.className = "p-4 rounded-xl border bg-amber-50 border-amber-300 text-amber-900 text-sm";
+        feedbackBox.innerHTML = `<strong>ℹ️ Note:</strong> आपके फ़ोन ब्राउज़र में लाइव माइक जांच बंद है। चिंता न करें! पहले <b>"1. AI की आवाज़ सुनें"</b> दबाएं, उसे ज़ोर से 3 बार बोलें और फिर हरे रंग का <b>"✅ 3. मैंने अभ्यास किया"</b> बटन दबाएं।`;
+        feedbackBox.classList.remove('hidden');
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-IN';
+      recognition.interimResults = false;
+
+      micBtn.classList.add('pulse-mic');
+      micBtn.innerText = "🎙️ अब बोलिए... (Listening)";
+
+      recognition.onresult = (event) => {
+        const spoken = event.results[0][0].transcript;
+        engCompleted.add(currentEngIndex);
+        updateScores();
+        feedbackBox.className = "p-4 rounded-xl border bg-emerald-50 border-emerald-300 text-emerald-950 text-sm";
+        feedbackBox.innerHTML = `🎉 <strong>शाबाश! आपने बोला:</strong> "${spoken}" <br><span class="text-xs text-emerald-700">आपका आत्मविश्वास बढ़ रहा है! यह वाक्य आपकी आज की रिपोर्ट में जुड़ गया है।</span>`;
+        feedbackBox.classList.remove('hidden');
+      };
+
+      recognition.onerror = () => {
+        feedbackBox.className = "p-4 rounded-xl border bg-amber-50 border-amber-300 text-amber-900 text-sm";
+        feedbackBox.innerHTML = `माइक आपकी आवाज़ साफ़ नहीं सुन पाया। कृपया एक बार फिर बोलें या <b>"✅ मैंने 3 बार बोलकर अभ्यास किया"</b> बटन दबाएं।`;
+        feedbackBox.classList.remove('hidden');
+      };
+
+      recognition.onend = () => {
+        micBtn.classList.remove('pulse-mic');
+        micBtn.innerText = "🎤 2. बोलकर चेक करें (Speak Now)";
+      };
+
+      recognition.start();
+    }
+
+    function markEnglishPracticed() {
+      engCompleted.add(currentEngIndex);
+      updateScores();
+      const feedbackBox = document.getElementById('speechFeedbackBox');
+      feedbackBox.className = "p-4 rounded-xl border bg-emerald-50 border-emerald-300 text-emerald-950 text-sm";
+      feedbackBox.innerHTML = `✅ <strong>बहुत बढ़िया!</strong> आपने इस वाक्य का अभ्यास पूरा कर लिया है। अब "अगला वाक्य" दबाएं।`;
+      feedbackBox.classList.remove('hidden');
+    }
+
+    function nextEnglish() {
+      currentEngIndex = (currentEngIndex + 1) % englishLessons.length;
+      renderEnglishCard();
+    }
+
+    function prevEnglish() {
+      currentEngIndex = (currentEngIndex - 1 + englishLessons.length) % englishLessons.length;
+      renderEnglishCard();
+    }
+
+    // ================= MATHS & HINDI MODULE =================
+    function renderMathCard() {
+      const q = mathHindiQuestions[currentMathIndex];
+      document.getElementById('mathTopicBadge').innerText = q.topic;
+      document.getElementById('mathConceptText').innerText = q.concept;
+      document.getElementById('mathQuestionText').innerText = q.question;
+      document.getElementById('mathProgressText').innerText = `${mathCompleted.size} / ${mathHindiQuestions.length}`;
+
+      const grid = document.getElementById('mathOptionsGrid');
+      grid.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "text-left font-bold p-3.5 rounded-xl border border-slate-300 hover:border-blue-600 hover:bg-blue-50 transition text-sm md:text-base";
+        btn.innerText = `${idx + 1}. ${opt}`;
+        btn.onclick = () => checkMathAnswer(idx);
+        grid.appendChild(btn);
+      });
+
+      document.getElementById('mathFeedbackBox').classList.add('hidden');
+    }
+
+    function checkMathAnswer(selectedIdx) {
+      const q = mathHindiQuestions[currentMathIndex];
+      const box = document.getElementById('mathFeedbackBox');
+      if (selectedIdx === q.correct) {
+        mathCompleted.add(currentMathIndex);
+        updateScores();
+        box.className = "p-4 rounded-xl border bg-emerald-50 border-emerald-300 text-emerald-950 text-sm";
+        box.innerHTML = `🎉 <strong>बिल्कुल सही जवाब!</strong><br>${q.explanation}`;
+      } else {
+        box.className = "p-4 rounded-xl border bg-rose-50 border-rose-300 text-rose-950 text-sm";
+        box.innerHTML = `❌ <strong>कोई बात नहीं, फिर से समझें:</strong><br>${q.explanation}`;
+      }
+      box.classList.remove('hidden');
+    }
+
+    function showMathHint() {
+      const q = mathHindiQuestions[currentMathIndex];
+      const box = document.getElementById('mathFeedbackBox');
+      box.className = "p-4 rounded-xl border bg-amber-50 border-amber-300 text-amber-950 text-sm";
+      box.innerHTML = `💡 <strong>Step-by-Step हल:</strong> ${q.explanation}`;
+      box.classList.remove('hidden');
+    }
+
+    function speakMathConcept() {
+      const q = mathHindiQuestions[currentMathIndex];
+      speakText(`${q.concept} सवाल है: ${q.question}`, 'hi-IN');
+    }
+
+    function nextMathQuestion() {
+      currentMathIndex = (currentMathIndex + 1) % mathHindiQuestions.length;
+      renderMathCard();
+    }
+
+    // ================= CAREER COUNSELOR MODULE =================
+    function renderCareerCards() {
+      const grid = document.getElementById('careerCardsGrid');
+      grid.innerHTML = '';
+      careerPaths.forEach((c) => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4";
+        card.innerHTML = `
+          <div class="space-y-2.5">
+            <h3 class="text-base md:text-lg font-extrabold text-blue-950">${c.title}</h3>
+            <div class="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-lg">${c.eligibility}</div>
+            <div class="text-xs font-bold text-amber-900 bg-amber-50 px-3 py-1.5 rounded-lg">${c.cost} • ${c.salary}</div>
+            <p class="text-xs md:text-sm text-slate-700 leading-relaxed pt-1">${c.roadmap}</p>
+          </div>
+          <button class="w-full bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold text-xs md:text-sm py-2.5 px-4 rounded-xl border border-blue-200 transition flex items-center justify-center gap-2">
+            🔊 माता-पिता को हिंदी में सुनाएं (Listen Career Guide)
+          </button>
+        `;
+        card.querySelector('button').onclick = () => {
+          speakText(`${c.title}। ${c.eligibility}। ${c.salary}। ${c.roadmap}`, 'hi-IN');
+        };
+        grid.appendChild(card);
+      });
+    }
+
+    // ================= TIMER & PARENT MODE =================
+    function toggleTimer() {
+      const btn = document.getElementById('timerBtn');
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        btn.innerText = "▶ Resume";
+        btn.className = "bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition";
+      } else {
+        timerRunning = true;
+        btn.innerText = "⏸ Pause";
+        btn.className = "bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold px-3 py-2 rounded-lg transition";
+        timerInterval = setInterval(() => {
+          if (timerSeconds > 0) {
+            timerSeconds--;
+            studiedMinutes = Math.floor((3600 - timerSeconds) / 60);
+            const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+            const secs = String(timerSeconds % 60).padStart(2, '0');
+            document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
+            updateParentDashboard();
+          }
+        }, 1000);
+      }
+    }
+
+    function updateScores() {
+      document.getElementById('engScoreBadge').innerText = engCompleted.size;
+      document.getElementById('mathScoreBadge').innerText = mathCompleted.size;
+      document.getElementById('mathProgressText').innerText = `${mathCompleted.size} / ${mathHindiQuestions.length}`;
+      updateParentDashboard();
+    }
+
+    function updateParentDashboard() {
+      document.getElementById('parentTimeStat').innerText = `${studiedMinutes} मिनट`;
+      document.getElementById('parentEngStat').innerText = `${engCompleted.size} / ${englishLessons.length} वाक्य`;
+      document.getElementById('parentMathStat').innerText = `${mathCompleted.size} / ${mathHindiQuestions.length} सवाल`;
+    }
+
+    function speakParentReportHindi() {
+      const name = document.getElementById('studentName').value.trim() || 'आपके बच्चे';
+      const msg = `नमस्ते माता-पिता जी। आज ${name} ने शिक्षा सेतु प्लेटफॉर्म पर ${studiedMinutes} मिनट पढ़ाई की है। उसने अंग्रेज़ी बोलने के ${engCompleted.size} वाक्यों का अभ्यास किया है, और गणित तथा हिंदी के ${mathCompleted.size} सवाल हल किए हैं। कृपया कल भी बच्चे को एक घंटा फोन के साथ एकाग्र होकर बैठने के लिए प्रेरित करें। धन्यवाद!`;
+      speakText(msg, 'hi-IN');
+    }
+
+    function sendWhatsAppReport() {
+      const name = document.getElementById('studentName').value.trim() || 'Student';
+      const cls = document.getElementById('studentClass').value;
+      const phone = document.getElementById('parentPhone').value.replace(/\D/g, '');
+      const reportText = `🇮🇳 *Shiksha Setu AI - दैनिक पढ़ाई रिपोर्ट*\n\n👦 विद्यार्थी: *${name}* (Class ${cls})\n⏱️ आज का पढ़ाई समय: *${studiedMinutes} मिनट*\n🗣️ English Speaking अभ्यास: *${engCompleted.size}/${englishLessons.length} वाक्य*\n➗ Maths & Hindi अभ्यास: *${mathCompleted.size}/${mathHindiQuestions.length} सवाल*\n\n✅ बच्चे ने आज का अभ्यास पूरे ध्यान से किया है।`;
+      const encoded = encodeURIComponent(reportText);
+      const url = phone.length >= 10
+        ? `https://wa.me/91${phone.slice(-10)}?text=${encoded}`
+        : `https://wa.me/?text=${encoded}`;
+      window.open(url, '_blank');
+    }
+
+    function changeClassLevel() {
+      renderEnglishCard();
+    }
+
+    function saveProgress() {
+      renderEnglishCard();
+    }
+
+    // Initialize on load
+    window.onload = () => {
+      renderEnglishCard();
+      renderMathCard();
+      renderCareerCards();
+      updateParentDashboard();
+    };
+  </script>
+</body>
+</html>
