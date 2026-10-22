@@ -3,18 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shiksha Setu AI | Junior Foundation (Nursery to Class 5)</title>
+  <title>Shiksha Setu AI | Multi-Child Learning Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
     body {
-      font-family: 'Outfit', 'Noto Sans Devanagari', sans-serif;
-      background-color: #f1f5f9;
-    }
-    .tab-active {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #ffffff;
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      background-color: #f8fafc;
     }
     .pulse-mic {
       animation: pulse 1.5s infinite;
@@ -28,25 +23,37 @@
 </head>
 <body class="min-h-screen flex flex-col text-slate-800">
 
-  <!-- LOGIN & PROFILE MODAL (Appears if no session saved) -->
-  <div id="loginModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-slate-100 space-y-6">
+  <!-- ================= VIEW 1: PARENT / LOGIN & CHILD SELECTOR ================= -->
+  <div id="loginView" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl space-y-6 my-auto">
       <div class="text-center space-y-2">
-        <span class="bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Shiksha Setu AI 🇮🇳</span>
-        <h2 class="text-2xl font-extrabold text-slate-900">विद्यार्थी लॉगिन (Student Login)</h2>
-        <p class="text-xs text-slate-500">अपने बच्चे की क्लास चुनें ताकि सही सिलेबस (Nursery to Class 5) शुरू हो सके।</p>
+        <span class="bg-blue-100 text-blue-900 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">Shiksha Setu AI 🇮🇳</span>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">अभिभावक एवं छात्र पोर्टल</h2>
+        <p class="text-xs md:text-sm text-slate-500">एक से अधिक बच्चों को जोड़ें और उनकी हिंदी, अंग्रेज़ी, और गणित की प्रगति सुरक्षित रखें।</p>
       </div>
 
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">बच्चे का पूरा नाम (Student Name):</label>
-          <input id="modalStudentName" type="text" placeholder="उदा. राहुल कुमार" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-bold text-slate-800 focus:outline-none focus:border-blue-600 text-sm" />
+      <!-- Existing Children List (if any) -->
+      <div id="existingChildrenContainer" class="space-y-3 hidden">
+        <label class="block text-xs font-bold text-slate-600 uppercase">पंजीकृत बच्चे (Select Child to Practice):</label>
+        <div id="childrenButtonsList" class="space-y-2"></div>
+        <div class="relative flex py-2 items-center">
+          <div class="flex-grow border-t border-slate-200"></div>
+          <span class="flex-shrink mx-4 text-xs text-slate-400 font-bold uppercase">या नया बच्चा जोड़ें</span>
+          <div class="flex-grow border-t border-slate-200"></div>
         </div>
+      </div>
 
+      <!-- Add New Child Form -->
+      <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+        <h3 class="text-sm font-extrabold text-slate-900">➕ नया बच्चा जोड़ें (Add Child Profile)</h3>
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">कक्षा चुनें (Select Class):</label>
-          <select id="modalStudentClass" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-bold text-slate-800 focus:outline-none focus:border-blue-600 text-sm">
-            <option value="Nursery">Nursery / LKG (अक्षर और गिनती)</option>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">बच्चे का नाम (Student Name):</label>
+          <input id="newChildName" type="text" placeholder="उदा. आरव कुमार" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 font-bold text-slate-800 focus:outline-none focus:border-blue-600 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">कक्षा (Class Level):</label>
+          <select id="newChildClass" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 font-bold text-slate-800 focus:outline-none focus:border-blue-600 text-sm">
+            <option value="Nursery">Nursery / LKG (अक्षर और बुनियादी गिनती)</option>
             <option value="UKG">UKG / Prep (शब्द और बेसिक जोड़)</option>
             <option value="Class 1">Class 1 (मात्राएं और जोड़-घटाव)</option>
             <option value="Class 2">Class 2 (English Phonics & Tables)</option>
@@ -55,448 +62,105 @@
             <option value="Class 5">Class 5 (Foundation Mastery)</option>
           </select>
         </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">माता-पिता का WhatsApp नंबर (Parent Phone):</label>
-          <input id="modalParentPhone" type="tel" placeholder="9876543210" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-bold text-slate-800 focus:outline-none focus:border-blue-600 text-sm" />
-        </div>
+        <button onclick="addNewChild()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold py-3.5 rounded-xl shadow transition text-sm">
+          बच्चों की सूची में जोड़ें (Save Profile)
+        </button>
       </div>
-
-      <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-2xl shadow-lg shadow-blue-600/30 transition text-base">
-        🚀 पढ़ाई शुरू करें (Start Learning)
-      </button>
     </div>
   </div>
 
-  <!-- HEADER & STRICT RULES BAR -->
-  <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-30 border-b border-slate-800">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-extrabold text-lg shadow-md">📚</div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-lg font-extrabold tracking-tight">Shiksha Setu AI</h1>
-            <span id="headerClassBadge" class="bg-blue-500/20 text-blue-300 border border-blue-500/30 font-bold px-2 py-0.5 rounded text-[11px]">Nursery</span>
+  <!-- ================= MAIN APP CONTAINER ================= -->
+  <div id="mainAppView" class="hidden flex-1 flex flex-col">
+    <!-- HEADER -->
+    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-extrabold text-lg shadow">📚</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-base font-extrabold text-slate-900">Shiksha Setu AI</h1>
+              <span id="activeChildBadge" class="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded text-xs">Rahul (Class 2)</span>
+            </div>
+            <button onclick="openChildSelector()" class="text-xs text-blue-600 hover:underline font-bold">🔄 बच्चा बदलें / दूसरा बच्चा चुनें</button>
           </div>
-          <p class="text-xs text-slate-400">Student: <span id="headerStudentName" class="text-white font-bold">Rahul</span></p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl text-right">
+            <div class="text-[10px] text-slate-500 font-bold uppercase">Focus Time</div>
+            <div id="timerDisplay" class="text-sm font-mono font-extrabold text-blue-900">60:00</div>
+          </div>
+          <button onclick="openParentDashboard()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs px-3.5 py-2.5 rounded-xl transition">
+            👨‍👩‍👧 Parent Mode
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- DASHBOARD VIEW (Subject Choice) -->
+    <div id="dashboardView" class="max-w-5xl w-full mx-auto px-4 py-6 flex-1 space-y-6">
+      <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 rounded-3xl shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase">Strict Syllabus Learning</span>
+          <h2 class="text-xl md:text-2xl font-extrabold mt-2">विषय चुनें और अभ्यास शुरू करें</h2>
+          <p class="text-xs md:text-sm text-blue-200 mt-1">छात्र अपनी पसंद का विषय चुन सकते हैं। AI शिक्षक पहले नियम समझाएगा, फिर टेस्ट लेगा।</p>
         </div>
       </div>
 
-      <!-- Strict 1-Hour Focus Timer -->
-      <div class="flex items-center gap-2.5 bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-xl">
-        <div>
-          <div class="text-[10px] text-slate-400 uppercase font-bold">Strict Focus</div>
-          <div id="timerDisplay" class="text-base font-mono font-extrabold text-amber-400">60:00</div>
+      <!-- Subject Cards Grid (Strictly Hindi, English, Maths) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- English Card -->
+        <div onclick="openSubject('english')" class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-500 transition cursor-pointer flex flex-col justify-between space-y-4 group">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl group-hover:scale-110 transition">🗣️</div>
+            <h3 class="text-lg font-extrabold text-slate-900">English (अंग्रेज़ी)</h3>
+            <p class="text-xs text-slate-500">Phonics, Vocabulary, Speaking & Sentences as per class level.</p>
+          </div>
+          <div class="flex items-center justify-between text-xs font-bold text-blue-600 pt-3 border-t border-slate-100">
+            <span id="engProgressText">0 / 3 Topics Completed</span>
+            <span>शुरू करें →</span>
+          </div>
         </div>
-        <button id="timerBtn" onclick="toggleTimer()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg transition">
-          ▶ Start
-        </button>
+
+        <!-- Hindi Card -->
+        <div onclick="openSubject('hindi')" class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between space-y-4 group">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl group-hover:scale-110 transition">📖</div>
+            <h3 class="text-lg font-extrabold text-slate-900">Hindi (हिन्दी व्याकरण)</h3>
+            <p class="text-xs text-slate-500">वर्णमाला, मात्राएं, शब्द रचना और मानक व्याकरण।</p>
+          </div>
+          <div class="flex items-center justify-between text-xs font-bold text-emerald-600 pt-3 border-t border-slate-100">
+            <span id="hindiProgressText">0 / 3 Topics Completed</span>
+            <span>शुरू करें →</span>
+          </div>
+        </div>
+
+        <!-- Maths Card -->
+        <div onclick="openSubject('maths')" class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-500 transition cursor-pointer flex flex-col justify-between space-y-4 group">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl group-hover:scale-110 transition">➗</div>
+            <h3 class="text-lg font-extrabold text-slate-900">Maths (गणित बेसिक)</h3>
+            <p class="text-xs text-slate-500">गिनती, जोड़-घटाव, पहाड़े और बेसिक प्रतिशत।</p>
+          </div>
+          <div class="flex items-center justify-between text-xs font-bold text-amber-600 pt-3 border-t border-slate-100">
+            <span id="mathsProgressText">0 / 3 Topics Completed</span>
+            <span>शुरू करें →</span>
+          </div>
+        </div>
       </div>
     </div>
-  </header>
 
-  <!-- NAVIGATION TABS -->
-  <nav class="max-w-4xl w-full mx-auto px-4 pt-4">
-    <div class="grid grid-cols-3 gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
-      <button onclick="switchTab('study')" id="tab-study" class="tab-active py-2.5 px-3 rounded-xl font-bold text-xs md:text-sm transition flex items-center justify-center gap-1.5">
-        <span>📖</span> Daily Lessons (पाठ)
-      </button>
-      <button onclick="switchTab('practice')" id="tab-practice" class="py-2.5 px-3 rounded-xl font-bold text-xs md:text-sm text-slate-600 hover:bg-slate-100 transition flex items-center justify-center gap-1.5">
-        <span>🎙️</span> Speaking & Quiz
-      </button>
-      <button onclick="switchTab('parent')" id="tab-parent" class="py-2.5 px-3 rounded-xl font-bold text-xs md:text-sm text-amber-900 bg-amber-100 hover:bg-amber-200 transition flex items-center justify-center gap-1.5">
-        <span>👨‍👩‍👧</span> Parent Mode
-      </button>
-    </div>
-  </nav>
-
-  <!-- MAIN CONTENT -->
-  <main class="max-w-4xl w-full mx-auto px-4 py-5 flex-1 space-y-4">
-
-    <!-- TAB 1: DAILY LESSONS (NURSERY TO CLASS 5 SYLLABUS) -->
-    <section id="section-study" class="space-y-4">
-      <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-5 rounded-3xl shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-2.5 py-1 rounded-full uppercase">Syllabus-Wise Learning</span>
-          <h2 class="text-lg md:text-xl font-extrabold mt-1.5">आज का बुनियादी पाठ (Foundational Lesson)</h2>
-          <p class="text-xs text-blue-100 mt-0.5">बच्चों के लिए सरल उच्चारण, वर्णमाला, गिनती और अंग्रेजी फोनिक्स।</p>
-        </div>
-        <button onclick="switchTab('practice')" class="bg-white text-blue-900 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-blue-50 transition">
-          टेस्ट दें (Take Quiz) →
+    <!-- SUBJECT PRACTICE VIEW (AI Teacher & Quiz Window) -->
+    <div id="subjectPracticeView" class="hidden max-w-4xl w-full mx-auto px-4 py-6 flex-1 space-y-6">
+      <div class="flex items-center justify-between">
+        <button onclick="returnToDashboard()" class="text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-xl transition">
+          ← मुख्य डैशबोर्ड पर वापस जाएं (Back)
         </button>
+        <span id="practiceSubjectTitle" class="text-sm font-extrabold text-blue-900 bg-blue-50 px-3.5 py-1 rounded-full border border-blue-200">English Practice</span>
       </div>
 
-      <!-- Lesson Card -->
-      <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 space-y-5">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <span id="lessonCategory" class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full">English Phonics & Alphabet</span>
-          <span id="lessonIndexIndicator" class="text-xs font-bold text-slate-400">1 / 5</span>
-        </div>
-
-        <div class="space-y-4">
-          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl">
-            <div class="text-[11px] font-bold text-slate-400 uppercase">हिन्दी अर्थ (Meaning / Rule):</div>
-            <p id="lessonHindi" class="text-base md:text-lg font-bold text-slate-800 mt-1">A फॉर Apple (सेब). A की आवाज़ 'ए' निकलती है।</p>
-          </div>
-
-          <div class="bg-blue-50/70 border-2 border-blue-200 p-5 rounded-2xl text-center space-y-2">
-            <div class="text-xs font-extrabold text-blue-600 uppercase">मुख्य शब्द / वाक्य (Target Word):</div>
-            <p id="lessonTarget" class="text-2xl md:text-3xl font-extrabold text-blue-950">A - Apple, Ant, Arm</p>
-            <p id="lessonPronounce" class="text-xs md:text-sm text-slate-600 font-medium">🔊 उच्चारण: <span class="text-slate-900 font-bold">एप्पल, एन्ट, आर्म</span></p>
-          </div>
-
-          <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl text-xs md:text-sm text-amber-950">
-            <strong>💡 Strict Rule Note:</strong> <span id="lessonTip">माता-पिता सुनिश्चित करें कि बच्चा हर शब्द को कम से कम 3 बार ज़ोर से बोलकर दोहराए।</span>
-          </div>
-        </div>
-
-        <!-- Controls -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-          <button onclick="speakCurrentLesson()" class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow transition text-sm">
-            🔊 AI आवाज़ सुनें (Listen)
-          </button>
-          <button onclick="nextLesson()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow transition text-sm">
-            ✅ याद हो गया, अगला पाठ (Next) →
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 2: SPEAKING & PRACTICE QUIZ -->
-    <section id="section-practice" class="hidden space-y-4">
-      <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-5 rounded-3xl shadow-lg">
-        <span class="bg-amber-300 text-slate-950 text-xs font-extrabold px-2.5 py-1 rounded-full uppercase">Interactive Practice</span>
-        <h2 class="text-lg md:text-xl font-extrabold mt-1.5">बोलकर अभ्यास और नन्हा टेस्ट (Speaking & Quiz)</h2>
-        <p class="text-xs text-emerald-100 mt-0.5">सही विकल्प चुनें या माइक दबाकर अंग्रेज़ी बोलें।</p>
-      </div>
-
-      <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 space-y-5">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <span id="quizTopic" class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">Maths & Counting</span>
-          <span id="quizProgress" class="text-xs font-bold text-slate-400">Question 1 / 4</span>
-        </div>
-
-        <div class="space-y-3">
-          <div class="text-xs font-bold uppercase text-slate-400">सवाल (Question):</div>
-          <p id="quizQuestion" class="text-lg md:text-xl font-extrabold text-slate-900"></p>
-
-          <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2"></div>
-        </div>
-
-        <div id="quizFeedback" class="hidden p-4 rounded-2xl border text-sm"></div>
-
-        <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-          <button onclick="startMicPractice()" id="micBtn" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-4 py-3 rounded-2xl shadow transition flex items-center gap-2">
-            🎙️ बोलकर चेक करें (Mic)
-          </button>
-          <button onclick="nextQuizQuestion()" class="text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 px-5 py-3 rounded-2xl transition">
-            अगला सवाल →
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: PARENT MODE & WHATSAPP REPORT -->
-    <section id="section-parent" class="hidden space-y-4">
-      <div class="bg-amber-50 border-2 border-amber-300 rounded-3xl p-6 space-y-5 shadow-sm">
-        <div class="border-b border-amber-200 pb-4 space-y-1">
-          <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-2.5 py-1 rounded-full uppercase">Parent Dashboard</span>
-          <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">नमस्ते माता-पिता जी 🙏</h2>
-          <p class="text-xs md:text-sm text-slate-700">आपको पढ़ाने की ज़रूरत नहीं है। नीचे बटन दबाकर हिंदी में सुनें कि आज बच्चे ने क्या सीखा।</p>
-        </div>
-
-        <!-- Giant Audio Button -->
-        <button onclick="speakParentReport()" class="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-base py-4 px-6 rounded-2xl shadow-md flex items-center justify-center gap-3 transition">
-          <span class="text-2xl">🔊</span>
-          <span>आज की प्रोग्रेस हिंदी में सुनें (Listen Audio Report)</span>
-        </button>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-white p-4 rounded-2xl border border-amber-200">
-            <div class="text-[11px] text-slate-500 font-bold">पढ़ाई का समय (Focus)</div>
-            <div id="parentTime" class="text-xl font-extrabold text-blue-900 mt-1">0 मिनट</div>
-          </div>
-          <div class="bg-white p-4 rounded-2xl border border-amber-200">
-            <div class="text-[11px] text-slate-500 font-bold">पूरे किए गए पाठ</div>
-            <div id="parentLessons" class="text-xl font-extrabold text-blue-900 mt-1">0 / 5</div>
-          </div>
-        </div>
-
-        <!-- WhatsApp Report Sender -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-3">
-          <h3 class="font-extrabold text-slate-900 text-sm">📲 WhatsApp पर रिपोर्ट भेजें</h3>
-          <div class="flex flex-col sm:flex-row gap-2.5">
-            <input id="reportPhoneInput" type="tel" placeholder="WhatsApp नंबर" class="flex-1 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-600 font-bold" />
-            <button onclick="sendWhatsAppReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow transition">
-              <span>💬</span> Send WhatsApp Report
-            </button>
-          </div>
-        </div>
-
-        <div class="pt-2 text-center">
-          <button onclick="logoutUser()" class="text-xs text-rose-600 hover:underline font-bold">
-            🔄 दूसरा छात्र लॉगिन करें (Logout / Change Profile)
-          </button>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="bg-slate-900 text-slate-400 text-xs py-4 px-4 mt-6 text-center">
-    <strong>Shiksha Setu AI</strong> — LKG to Class 5 Foundation • 100% Free & Strict Learning
-  </footer>
-
-  <script>
-    // ================= STATE & SYLLABUS DATA (NURSERY TO CLASS 5) =================
-    let currentUser = { name: "Rahul", classLevel: "Nursery", phone: "" };
-    let currentLessonIdx = 0;
-    let currentQuizIdx = 0;
-    let lessonsCompletedCount = 0;
-    let timerSeconds = 3600;
-    let timerRunning = false;
-    let timerInterval = null;
-    let studiedMins = 0;
-
-    // Class-wise Nursery to Class 5 Syllabi
-    const syllabi = {
-      "Nursery": [
-        { cat: "English Phonics", hindi: "A फॉर Apple (सेब). A की आवाज़ 'ए' निकलती है।", target: "A - Apple, Ant, Ax", pronounce: "एप्पल, एन्ट, एक्स", tip: "बच्चे को हर अक्षर की आवाज़ बोलकर सिखाएं।" },
-        { cat: "English Phonics", hindi: "B फॉर Ball (गेंद). B की आवाज़ 'ब' होती है।", target: "B - Ball, Bat, Boy", pronounce: "बॉल, बैट, बॉय", tip: "बैट और बॉल शब्द रोज़मर्रा में उपयोग होते हैं।" },
-        { cat: "Maths Counting", hindi: "गिनती सीखें: 1, 2, 3, 4, 5", target: "1 (One), 2 (Two), 3 (Three)", pronounce: "वन, टू, थ्री", tip: "हाथ की उंगलियां दिखाकर गिनती गिनवाएं।" },
-        { cat: "Hindi Varnmala", hindi: "वर्णमाला: अ से अनार, आ से आम", target: "अ, आ, इ, ई, उ, ऊ", pronounce: "अ अनार का, आ आम का", tip: "अक्षरों पर उंगली रखकर उच्चारण कराएं।" }
-      ],
-      "UKG": [
-        { cat: "English Words", hindi: "दो अक्षर के शब्द पढ़ना सीखें: C-A-T Cat (बिल्ली)", target: "CAT = Cat, Bat, Rat, Mat", pronounce: "कैट, बैट, रैट, मैट", tip: "अक्षरों की आवाज़ जोड़कर पढ़ना सिखाएं।" },
-        { cat: "Maths Addition", hindi: "छोटा जोड़ (Addition): 2 और 1 मिलकर 3 होते हैं।", target: "2 + 1 = 3", pronounce: "दो और एक तीन", tip: "सामने वस्तुएं रखकर जोड़ सिखाएं।" },
-        { cat: "Hindi Matrayen", hindi: "आ की मात्रा ('ा'): क + ा = का", target: "काम, नाम, दाम, आम", pronounce: "काम, नाम, दाम", tip: "मात्रा लगाने पर आवाज़ लंबी हो जाती है।" }
-      ],
-      "Class 1": [
-        { cat: "Hindi Vyakaran", hindi: "संज्ञा (Noun): किसी व्यक्ति, वस्तु या स्थान के नाम को संज्ञा कहते हैं।", target: "राम, दिल्ली, किताब, आम", pronounce: "नाम वाले शब्द संज्ञा कहलाते हैं", tip: "आसपास की चीज़ों के नाम पूछें।" },
-        { cat: "Maths Basic", hindi: "घटाव (Subtraction): 5 में से 2 गए तो 3 बचे।", target: "5 - 2 = 3", pronounce: "पांच घटा दो बराबर तीन", tip: "रोज़मर्रा के उदाहरण दें।" },
-        { cat: "English Sentences", hindi: "अपना परिचय देना: My name is...", target: "My name is Rahul. I am 6 years old.", pronounce: "माय नेम इज़ राहुल। आई एम सिक्स इयर्स ओल्ड।", tip: "पूरा वाक्य साफ़ आवाज़ में बुलवाएं।" }
-      ],
-      "Class 2": [
-        { cat: "English Speaking", hindi: "विनम्रता के शब्द: Please, Thank You, Sorry", target: "Please help me. Thank you so much.", pronounce: "प्लीज हेल्प मी। थैंक यू सो मच।", tip: "हर बात में शुक्रिया और कृपया कहना सिखाएं।" },
-        { cat: "Maths Tables", hindi: "पहाड़ा याद रखें: 2 का पहाड़ा (2 x 1 = 2)", target: "2, 4, 6, 8, 10, 12, 14, 16, 18, 20", pronounce: "दो एकम दो, दो दूनी चार", tip: "पहाड़े रोज़ सुबह 5 मिनट बोलें।" }
-      ],
-      "Class 3": [
-        { cat: "Maths Multiply", hindi: "गुणा (Multiplication) का मतलब बार-बार जोड़ना होता है।", target: "4 × 3 = 12 (4 को 3 बार जोड़ें)", pronounce: "चार गुणा तीन बराबर बारह", tip: "पहाड़े याद होने पर गुणा आसान हो जाती है।" },
-        { cat: "English Grammar", hindi: "Pronoun (सर्वनाम): जो शब्द संज्ञा की जगह उपयोग हों (He, She, It)", target: "He is a boy. She is a girl.", pronounce: "ही इज़ अ बॉय। शी इज़ अ गर्ल।", tip: "लड़के के लिए He और लड़की के लिए She लगता है।" }
-      ],
-      "Class 4": [
-        { cat: "English Sentences", hindi: "कंटीन्यूअस टेंस: मैं पढ़ रहा हूँ (I am studying)", target: "I am reading a book. She is playing.", pronounce: "आई एम रीडिंग अ बुक।", tip: "काम जारी रहने पर Verb के साथ ing लगता है।" },
-        { cat: "Maths Fractions", hindi: "भिन्न (Fraction): एक रोटी के 4 हिस्से में से 1 हिस्सा = 1/4", target: "Numerator / Denominator (अंश / हर)", pronounce: "एक चौथाई हिस्सा", tip: "वास्तविक उदाहरण देकर समझाएं।" }
-      ],
-      "Class 5": [
-        { cat: "Foundation Mastery", hindi: "प्रतिशत (Percentage) का बेसिक: 100 में से कितना भाग।", target: "50% = आधा हिस्सा (1/2)", pronounce: "पचास प्रतिशत", tip: "दुकान की छूट (Discount) का हिसाब सिखाएं।" },
-        { cat: "English Advanced", hindi: "Past Tense (बीता हुआ कल): I went to school yesterday.", target: "I went, He played, She ate.", pronounce: "आई वेंट, ही प्लेड", tip: "भूतकाल में क्रिया का दूसरा रूप (V2) आता है।" }
-      ]
-    };
-
-    const quizzes = [
-      { topic: "Maths Counting", q: "अगर आपके पास 5 टॉफी हैं और 2 आपने खा लीं, तो कितनी बची?", options: ["2 टॉफी", "3 टॉफी", "4 टॉफी", "1 टॉफी"], correct: 1, exp: "5 में से 2 घटाने पर 3 बचती हैं!" },
-      { topic: "English Phonics", q: "Apple (सेब) की शुरुआत किस अंग्रेज़ी अक्षर से होती है?", options: ["B", "C", "A", "M"], correct: 2, exp: "A for Apple होता है।" },
-      { topic: "Hindi Vyakaran", q: "इनमें से कौन-सा नाम किसी जगह (Place) का है?", options: ["किताब", "दिल्ली", "पेन", "कुर्सी"], correct: 1, exp: "दिल्ली एक शहर/स्थान का नाम है।" }
-    ];
-
-    // ================= INITIALIZATION & LOGIN =================
-    window.onload = () => {
-      const saved = localStorage.getItem('shiksha_user');
-      if (saved) {
-        currentUser = JSON.parse(saved);
-        document.getElementById('loginModal').classList.add('hidden');
-        applyUserData();
-      }
-    };
-
-    function handleLogin() {
-      const name = document.getElementById('modalStudentName').value.trim();
-      const cls = document.getElementById('modalStudentClass').value;
-      const phone = document.getElementById('modalParentPhone').value.trim();
-
-      if (!name) {
-        alert("कृपया छात्र का नाम दर्ज करें।");
-        return;
-      }
-
-      currentUser = { name, classLevel: cls, phone };
-      localStorage.setItem('shiksha_user', JSON.stringify(currentUser));
-      document.getElementById('loginModal').classList.add('hidden');
-      applyUserData();
-    }
-
-    function logoutUser() {
-      localStorage.removeItem('shiksha_user');
-      location.reload();
-    }
-
-    function applyUserData() {
-      document.getElementById('headerStudentName').innerText = currentUser.name;
-      document.getElementById('headerClassBadge').innerText = currentUser.classLevel;
-      if (currentUser.phone) {
-        document.getElementById('reportPhoneInput').value = currentUser.phone;
-      }
-      loadCurrentLesson();
-      loadCurrentQuiz();
-    }
-
-    // ================= SPEECH ENGINE =================
-    function speakText(text, lang = 'hi-IN') {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = lang;
-      u.rate = 0.9;
-      window.speechSynthesis.speak(u);
-    }
-
-    // ================= TAB NAVIGATION =================
-    function switchTab(tab) {
-      ['study', 'practice', 'parent'].forEach(t => {
-        document.getElementById('section-' + t).classList.add('hidden');
-        document.getElementById('tab-' + t).classList.remove('tab-active', 'text-white');
-        document.getElementById('tab-' + t).classList.add('text-slate-600', 'bg-white');
-      });
-      document.getElementById('section-' + tab).classList.remove('hidden');
-      const btn = document.getElementById('tab-' + tab);
-      btn.classList.remove('text-slate-600', 'bg-white', 'bg-amber-100');
-      btn.classList.add('tab-active');
-      updateParentStats();
-    }
-
-    // ================= LESSONS LOGIC =================
-    function getActiveSyllabus() {
-      return syllabi[currentUser.classLevel] || syllabi["Nursery"];
-    }
-
-    function loadCurrentLesson() {
-      const list = getActiveSyllabus();
-      if (currentLessonIdx >= list.length) currentLessonIdx = 0;
-      const item = list[currentLessonIdx];
-
-      document.getElementById('lessonCategory').innerText = item.cat;
-      document.getElementById('lessonHindi').innerText = item.hindi;
-      document.getElementById('lessonTarget').innerText = item.target;
-      document.getElementById('lessonPronounce').innerHTML = `🔊 उच्चारण: <span class="text-slate-900 font-bold">${item.pronounce}</span>`;
-      document.getElementById('lessonTip').innerText = item.tip;
-      document.getElementById('lessonIndexIndicator').innerText = `${currentLessonIdx + 1} / ${list.length}`;
-    }
-
-    function speakCurrentLesson() {
-      const item = getActiveSyllabus()[currentLessonIdx];
-      speakText(`${item.hindi}. मुख्य शब्द है: ${item.target}`, 'hi-IN');
-    }
-
-    function nextLesson() {
-      lessonsCompletedCount++;
-      const list = getActiveSyllabus();
-      currentLessonIdx = (currentLessonIdx + 1) % list.length;
-      loadCurrentLesson();
-      updateParentStats();
-    }
-
-    // ================= QUIZ LOGIC =================
-    function loadCurrentQuiz() {
-      const q = quizzes[currentQuizIdx];
-      document.getElementById('quizTopic').innerText = q.topic;
-      document.getElementById('quizQuestion').innerText = q.q;
-      document.getElementById('quizProgress').innerText = `Question ${currentQuizIdx + 1} / ${quizzes.length}`;
-      document.getElementById('quizFeedback').classList.add('hidden');
-
-      const grid = document.getElementById('quizOptions');
-      grid.innerHTML = '';
-      q.options.forEach((opt, idx) => {
-        const b = document.createElement('button');
-        b.className = "text-left font-bold p-3.5 rounded-2xl border border-slate-300 hover:border-blue-600 hover:bg-blue-50 transition text-sm text-slate-800";
-        b.innerText = `${idx + 1}. ${opt}`;
-        b.onclick = () => checkQuiz(idx, q.correct, q.exp);
-        grid.appendChild(b);
-      });
-    }
-
-    function checkQuiz(selected, correct, exp) {
-      const box = document.getElementById('quizFeedback');
-      box.classList.remove('hidden');
-      if (selected === correct) {
-        box.className = "p-4 rounded-2xl border bg-emerald-50 border-emerald-300 text-emerald-950 text-sm";
-        box.innerHTML = `🎉 <strong>बहुत बढ़िया! सही जवाब।</strong><br>${exp}`;
-      } else {
-        box.className = "p-4 rounded-2xl border bg-rose-50 border-rose-300 text-rose-950 text-sm";
-        box.innerHTML = `❌ <strong>गलਤ! सही उत्तर:</strong> ${exp}`;
-      }
-    }
-
-    function nextQuizQuestion() {
-      currentQuizIdx = (currentQuizIdx + 1) % quizzes.length;
-      loadCurrentQuiz();
-    }
-
-    function startMicPractice() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert("आपके ब्राउज़र में माइक सपोर्ट नहीं है। कृपया Chrome का उपयोग करें।");
-        return;
-      }
-      const rec = new SpeechRecognition();
-      rec.lang = 'en-IN';
-      const micBtn = document.getElementById('micBtn');
-      micBtn.classList.add('pulse-mic');
-      micBtn.innerText = "🎙️ सुन रहे हैं...";
-
-      rec.onresult = (e) => {
-        const text = e.results[0][0].transcript;
-        alert(`शानदार! आपने साफ़ बोला: "${text}"`);
-      };
-      rec.onend = () => {
-        micBtn.classList.remove('pulse-mic');
-        micBtn.innerText = "🎙️ बोलकर चेक करें (Mic)";
-      };
-      rec.start();
-    }
-
-    // ================= TIMER & PARENT STATS =================
-    function toggleTimer() {
-      const btn = document.getElementById('timerBtn');
-      if (timerRunning) {
-        clearInterval(timerInterval);
-        timerRunning = false;
-        btn.innerText = "▶ Resume";
-      } else {
-        timerRunning = true;
-        btn.innerText = "⏸ Pause";
-        timerInterval = setInterval(() => {
-          if (timerSeconds > 0) {
-            timerSeconds--;
-            studiedMins = Math.floor((3600 - timerSeconds) / 60);
-            const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
-            const s = String(timerSeconds % 60).padStart(2, '0');
-            document.getElementById('timerDisplay').innerText = `${m}:${s}`;
-            updateParentStats();
-          }
-        }, 1000);
-      }
-    }
-
-    function updateParentStats() {
-      document.getElementById('parentTime').innerText = `${studiedMins} मिनट`;
-      document.getElementById('parentLessons').innerText = `${lessonsCompletedCount} पूरे किए`;
-    }
-
-    function speakParentReport() {
-      const msg = `नमस्ते माता-पिता जी। ${currentUser.name} (कक्षा ${currentUser.classLevel}) ने आज शिक्षा सेतु पर ${studiedMins} मिनट पढ़ाई की है और ${lessonsCompletedCount} पाठ पूरे किए हैं। कृपया बच्चे को रोज़ समय दें। धन्यवाद!`;
-      speakText(msg, 'hi-IN');
-    }
-
-    function sendWhatsAppReport() {
-      const phone = document.getElementById('reportPhoneInput').value.replace(/\D/g, '');
-      const text = `🇮🇳 *Shiksha Setu AI - दैनिक प्रगति रिपोर्ट*\n\n👶 छात्र: *${currentUser.name}* (Class ${currentUser.classLevel})\n⏱️ पढ़ाई का समय: *${studiedMins} मिनट*\n📚 पूरे किए गए पाठ: *${lessonsCompletedCount}*\n\n✅ बच्चा रोज़ नियम से पढ़ाई कर रहा है!`;
-      const encoded = encodeURIComponent(text);
-      const url = phone.length >= 10
-        ? `https://wa.me/91${phone.slice(-10)}?text=${encoded}`
-        : `https://wa.me/?text=${encoded}`;
-      window.open(url, '_blank');
-    }
-  </script>
-</body>
-</html>
+      <!-- Topic List Header -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase text-slate-400">Step
