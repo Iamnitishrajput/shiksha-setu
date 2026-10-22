@@ -3,108 +3,88 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shiksha Setu AI | Duolingo-Style Learning Platform</title>
+  <title>Shiksha Setu AI | Duolingo Edition</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap');
     body {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
-      background-color: #f0fdf4;
+      font-family: 'Nunito', 'Noto Sans Devanagari', sans-serif;
+      background-color: #f7f9fa;
+    }
+    .duo-btn {
+      transition: all 0.1s ease;
+      box-shadow: 0 4px 0 0 rgba(0,0,0,0.15);
+    }
+    .duo-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 0 rgba(0,0,0,0.15);
     }
     .duo-card {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 6px 0 0 #cbd5e1;
+      border: 2px solid #e5e7eb;
+      box-shadow: 0 4px 0 0 #e5e7eb;
+      transition: all 0.2s ease;
     }
     .duo-card:hover {
+      border-color: #cbd5e1;
       transform: translateY(-2px);
-      box-shadow: 0 8px 0 0 #94a3b8;
+      box-shadow: 0 6px 0 0 #cbd5e1;
     }
-    .duo-card:active {
+    .path-node {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 0 6px 0 0 rgba(0,0,0,0.2);
+      transition: all 0.15s ease;
+    }
+    .path-node:active {
       transform: translateY(4px);
-      box-shadow: 0 2px 0 0 #94a3b8;
+      box-shadow: 0 2px 0 0 rgba(0,0,0,0.2);
     }
-    .duo-btn-green {
-      box-shadow: 0 5px 0 0 #15803d;
-      transition: all 0.1s ease;
+    .bounce-anim {
+      animation: bounce 2s infinite ease-in-out;
     }
-    .duo-btn-green:active {
-      transform: translateY(4px);
-      box-shadow: 0 1px 0 0 #15803d;
-    }
-    .slide-in-up {
-      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(40px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .bounce-fox {
-      animation: foxBounce 2s infinite ease-in-out;
-    }
-    @keyframes foxBounce {
+    @keyframes bounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-6px); }
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-800">
+<body class="min-h-screen flex flex-col text-slate-700 bg-[#f7f9fa]">
 
-  <!-- ================= CARTOON FOX LOGIN MODAL (SLIDE-IN GATEWAY) ================= -->
-  <div id="loginModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-[32px] max-w-md w-full p-6 md:p-8 shadow-2xl space-y-6 slide-in-up border-4 border-emerald-500 relative overflow-hidden">
+  <!-- ================= CARTOON FOX LOGIN MODAL ================= -->
+  <div id="loginModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-[32px] max-w-md w-full p-6 md:p-8 shadow-2xl space-y-6 border-4 border-[#58cc02] relative">
       
-      <!-- Cartoon Fox SVG Mascot -->
+      <!-- Fox Mascot -->
       <div class="flex flex-col items-center text-center space-y-3">
-        <div class="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center shadow-inner bounce-fox border-4 border-amber-400">
-          <svg viewBox="0 0 100 100" class="w-16 h-16">
-            <!-- Fox Face Base -->
-            <polygon points="50,15 85,75 15,75" fill="#f97316"/>
-            <!-- Inner Ears -->
-            <polygon points="32,45 50,20 42,55" fill="#fdba74"/>
-            <polygon points="68,45 50,20 58,55" fill="#fdba74"/>
-            <!-- White Cheeks -->
-            <path d="M15,75 Q50,95 85,75 Q50,55 15,75" fill="#ffffff"/>
-            <!-- Eyes -->
-            <circle cx="38" cy="65" r="4" fill="#0f172a"/>
-            <circle cx="62" cy="65" r="4" fill="#0f172a"/>
-            <!-- Nose -->
-            <ellipse cx="50" cy="72" rx="5" ry="3" fill="#0f172a"/>
-            <!-- Graduation Cap -->
-            <polygon points="50,2 80,14 50,26 20,14" fill="#1e293b"/>
-            <rect x="47" y="24" width="6" height="6" fill="#1e293b"/>
-            <path d="M72,17 L72,27 C72,30 68,30 68,27 L68,17" stroke="#facc15" stroke-width="2" fill="none"/>
-          </svg>
+        <div class="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center shadow-inner bounce-anim border-4 border-amber-400">
+          <span class="text-5xl">🦊</span>
         </div>
         <div>
-          <span class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">Hi, I'm Foxy! 🦊</span>
-          <h2 class="text-2xl font-extrabold text-slate-900 mt-1">शिखा सेतु में आपका स्वागत है</h2>
-          <p class="text-xs text-slate-500">लॉगिन करें और अपनी पढ़ाई का सफर शुरू करें।</p>
+          <span class="bg-[#58cc02]/20 text-[#58cc02] text-xs font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider">Meet Foxy!</span>
+          <h2 class="text-2xl font-black text-slate-900 mt-1">शिखा सेतु में आपका स्वागत है</h2>
+          <p class="text-xs text-slate-500 font-semibold">लॉगिन करें और खेल-खेल में पढ़ाई शुरू करें।</p>
         </div>
       </div>
 
-      <!-- Credentials Form -->
+      <!-- Form -->
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">विद्यार्थी का नाम (Name):</label>
-          <input id="loginName" type="text" placeholder="उदा. राहुल कुमार" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-3.5 font-bold text-slate-800 focus:outline-none focus:border-emerald-500 text-sm shadow-sm" />
+          <label class="block text-xs font-black text-slate-400 uppercase tracking-wider mb-1">विद्यार्थी का नाम (Name):</label>
+          <input id="userNameInput" type="text" placeholder="उदा. राहुल कुमार" class="w-full bg-slate-100 border-2 border-slate-200 rounded-2xl px-4 py-3.5 font-bold text-slate-800 focus:outline-none focus:border-[#58cc02] text-sm" />
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">मोबाइल नंबर या ईमेल (Phone / Email):</label>
-          <input id="loginCredential" type="text" placeholder="उदा. 9876543210 या email@gmail.com" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-3.5 font-bold text-slate-800 focus:outline-none focus:border-emerald-500 text-sm shadow-sm" />
+          <label class="block text-xs font-black text-slate-400 uppercase tracking-wider mb-1">मोबाइल नंबर या ईमेल (Phone / Email):</label>
+          <input id="userCredInput" type="text" placeholder="उदा. 9876543210" class="w-full bg-slate-100 border-2 border-slate-200 rounded-2xl px-4 py-3.5 font-bold text-slate-800 focus:outline-none focus:border-[#58cc02] text-sm" />
         </div>
 
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">कक्षा चुनें (Class Level):</label>
-          <select id="loginClass" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-3.5 font-bold text-slate-800 focus:outline-none focus:border-emerald-500 text-sm shadow-sm">
-            <option value="Class 5">Class 5 (Foundation)</option>
-            <option value="Class 8">Class 8 (Middle Base)</option>
-            <option value="Class 10">Class 10 (Board & Career Prep)</option>
-            <option value="Class 12">Class 12 (Advanced & Jobs)</option>
-          </select>
-        </div>
-
-        <button onclick="submitLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-4 rounded-2xl duo-btn-green transition text-base shadow-lg">
+        <button onclick="handleLoginSubmit()" class="w-full bg-[#58cc02] hover:bg-[#46a302] text-white font-black py-4 rounded-2xl duo-btn text-base shadow-lg tracking-wide uppercase">
           🚀 शुरू करें (Let's Go!)
         </button>
       </div>
@@ -112,190 +92,213 @@
     </div>
   </div>
 
-  <!-- ================= MAIN APP INTERFACE ================= -->
-  <div id="mainAppContainer" class="hidden flex-1 flex flex-col">
+  <!-- ================= MAIN DUOLINGO APP CONTAINER ================= -->
+  <div id="mainApp" class="hidden flex-1 flex flex-col">
     
-    <!-- TOP NAVIGATION BAR -->
-    <header class="bg-white border-b-2 border-slate-200 sticky top-0 z-30 shadow-sm">
-      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <!-- TOP STATS BAR -->
+    <header class="bg-white border-b-2 border-slate-200 sticky top-0 z-30">
+      <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-amber-400 rounded-2xl border-2 border-amber-600 flex items-center justify-center font-black text-xl shadow">🦊</div>
+          <span class="text-3xl bounce-anim">🦊</span>
           <div>
-            <div class="flex items-center gap-2">
-              <h1 class="text-base font-extrabold text-slate-900 tracking-tight">Shiksha Setu AI</h1>
-              <span id="badgeUser" class="bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-0.5 rounded-full text-xs">Rahul</span>
-            </div>
-            <button onclick="openLoginModal()" class="text-xs text-blue-600 hover:underline font-bold">🔄 प्रोफाइल बदलें</button>
+            <h1 id="headerName" class="text-sm font-black text-slate-800">Rahul</h1>
+            <button onclick="openLoginModal()" class="text-[11px] font-bold text-blue-500 hover:underline">🔄 प्रोफाइल बदलें</button>
           </div>
         </div>
 
-        <!-- Gamification Stats -->
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-1.5 bg-amber-50 border-2 border-amber-200 px-3 py-1.5 rounded-2xl font-extrabold text-amber-800 text-xs">
-            <span>🔥</span> <span id="streakCount">3 Days Streak</span>
+        <!-- Duo Stats: Streak, XP, Hearts -->
+        <div class="flex items-center gap-4 font-black text-sm">
+          <div class="flex items-center gap-1.5 text-orange-500">
+            <span>🔥</span> <span id="statStreak">3</span>
           </div>
-          <div class="flex items-center gap-1.5 bg-sky-50 border-2 border-sky-200 px-3 py-1.5 rounded-2xl font-extrabold text-sky-800 text-xs">
-            <span>⭐</span> <span id="xpCount">120 XP</span>
+          <div class="flex items-center gap-1.5 text-amber-500">
+            <span>⚡</span> <span id="statXP">150</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-rose-500">
+            <span>❤️</span> <span id="statHearts">5</span>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- DASHBOARD VIEW: THE 4 PILLARS -->
-    <div id="viewDashboard" class="max-w-5xl w-full mx-auto px-4 py-8 flex-1 space-y-6">
+    <!-- VIEW 1: SUBJECT SELECTOR & SKILL PATH -->
+    <div id="viewDashboard" class="max-w-4xl w-full mx-auto px-4 py-8 flex-1 space-y-8">
       
-      <!-- Welcome Banner with Fox Illustration -->
-      <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-6 md:p-8 rounded-[32px] shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border-b-8 border-emerald-800">
-        <div class="space-y-2 text-center md:text-left">
-          <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase">Duolingo-Style Learning</span>
-          <h2 class="text-2xl md:text-3xl font-extrabold">आज कौन सा विषय अभ्यास करना है?</h2>
-          <p class="text-xs md:text-sm text-emerald-100">अपने पसंदीदा विषय पर क्लिक करें और AI शिक्षक के साथ सीखें।</p>
-        </div>
-        <div class="w-20 h-20 bg-amber-400 rounded-full border-4 border-white flex items-center justify-center text-4xl shadow-lg bounce-fox shrink-0">
-          🦊
-        </div>
+      <div class="text-center space-y-2">
+        <h2 class="text-2xl font-black text-slate-800">अपना विषय चुनें (Select Subject)</h2>
+        <p class="text-xs font-bold text-slate-400">नीचे दिए गए 4 स्तंभों में से किसी एक पर क्लिक करें।</p>
       </div>
 
-      <!-- 4 Core Pillars Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- 4 Core Pillars Grid (Duolingo Style Cards) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         
-        <!-- 1. English Card -->
-        <div onclick="openSubject('english')" class="bg-white rounded-[28px] p-6 duo-card border-2 border-slate-200 cursor-pointer flex flex-col justify-between space-y-6">
-          <div class="space-y-3">
-            <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">🗣️</div>
-            <h3 class="text-lg font-extrabold text-slate-900">English Speaking</h3>
-            <p class="text-xs text-slate-500">Phonics, daily sentences, and conversational practice.</p>
-          </div>
-          <div class="flex items-center justify-between text-xs font-extrabold text-blue-600 pt-3 border-t border-slate-100">
-            <span id="progEnglish">2 / 3 Levels</span>
-            <span class="bg-blue-600 text-white px-3 py-1.5 rounded-xl">अभ्यास →</span>
-          </div>
-        </div>
-
-        <!-- 2. Hindi Card -->
-        <div onclick="openSubject('hindi')" class="bg-white rounded-[28px] p-6 duo-card border-2 border-slate-200 cursor-pointer flex flex-col justify-between space-y-6">
-          <div class="space-y-3">
-            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">📖</div>
-            <h3 class="text-lg font-extrabold text-slate-900">Hindi Vyakaran</h3>
-            <p class="text-xs text-slate-500">वर्णमाला, मात्राएं, और शुद्ध वाक्य रचना।</p>
-          </div>
-          <div class="flex items-center justify-between text-xs font-extrabold text-emerald-600 pt-3 border-t border-slate-100">
-            <span id="progHindi">1 / 3 Levels</span>
-            <span class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl">अभ्यास →</span>
+        <!-- English Speaking -->
+        <div onclick="selectSubject('english')" class="bg-white p-5 rounded-[24px] duo-card cursor-pointer flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-3xl font-black shrink-0">🗣️</div>
+          <div class="flex-1">
+            <h3 class="font-black text-lg text-slate-800">English Speaking</h3>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">Phonics & Daily Sentences</p>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full mt-3 overflow-hidden">
+              <div id="barEng" class="bg-sky-500 h-full rounded-full" style="width: 33%;"></div>
+            </div>
           </div>
         </div>
 
-        <!-- 3. Maths Card -->
-        <div onclick="openSubject('maths')" class="bg-white rounded-[28px] p-6 duo-card border-2 border-slate-200 cursor-pointer flex flex-col justify-between space-y-6">
-          <div class="space-y-3">
-            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">➗</div>
-            <h3 class="text-lg font-extrabold text-slate-900">Maths Foundation</h3>
-            <p class="text-xs text-slate-500">गिनती, जोड़-घटाव, और प्रतिशत के बेसिक नियम।</p>
-          </div>
-          <div class="flex items-center justify-between text-xs font-extrabold text-amber-600 pt-3 border-t border-slate-100">
-            <span id="progMaths">3 / 3 Levels</span>
-            <span class="bg-amber-600 text-white px-3 py-1.5 rounded-xl">अभ्यास →</span>
+        <!-- Hindi Vyakaran -->
+        <div onclick="selectSubject('hindi')" class="bg-white p-5 rounded-[24px] duo-card cursor-pointer flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl font-black shrink-0">📖</div>
+          <div class="flex-1">
+            <h3 class="font-black text-lg text-slate-800">Hindi Vyakaran</h3>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">वर्णमाला, मात्राएं और व्याकरण</p>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full mt-3 overflow-hidden">
+              <div id="barHindi" class="bg-emerald-500 h-full rounded-full" style="width: 66%;"></div>
+            </div>
           </div>
         </div>
 
-        <!-- 4. Career Counselling Card -->
-        <div onclick="openSubject('career')" class="bg-white rounded-[28px] p-6 duo-card border-2 border-slate-200 cursor-pointer flex flex-col justify-between space-y-6">
-          <div class="space-y-3">
-            <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">🧭</div>
-            <h3 class="text-lg font-extrabold text-slate-900">Career Counselling</h3>
-            <p class="text-xs text-slate-500">10वीं और 12वीं के बाद सही सरकारी और प्राइवेट जॉब रोडमैप।</p>
+        <!-- Maths Foundation -->
+        <div onclick="selectSubject('maths')" class="bg-white p-5 rounded-[24px] duo-card cursor-pointer flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl font-black shrink-0">➗</div>
+          <div class="flex-1">
+            <h3 class="font-black text-lg text-slate-800">Maths Foundation</h3>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">गिनती, जोड़ और प्रतिशत</p>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full mt-3 overflow-hidden">
+              <div id="barMaths" class="bg-amber-500 h-full rounded-full" style="width: 33%;"></div>
+            </div>
           </div>
-          <div class="flex items-center justify-between text-xs font-extrabold text-purple-600 pt-3 border-t border-slate-100">
-            <span id="progCareer">1 / 3 Roadmaps</span>
-            <span class="bg-purple-600 text-white px-3 py-1.5 rounded-xl">देखें →</span>
+        </div>
+
+        <!-- Career Counselling -->
+        <div onclick="selectSubject('career')" class="bg-white p-5 rounded-[24px] duo-card cursor-pointer flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-3xl font-black shrink-0">🧭</div>
+          <div class="flex-1">
+            <h3 class="font-black text-lg text-slate-800">Career Counselling</h3>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">सरकारी और प्राइवेट जॉब रोडमैप</p>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full mt-3 overflow-hidden">
+              <div id="barCareer" class="bg-purple-500 h-full rounded-full" style="width: 50%;"></div>
+            </div>
           </div>
         </div>
 
       </div>
+
+      <!-- Skill Tree Path Preview -->
+      <div class="bg-white rounded-[32px] p-6 duo-card space-y-4 text-center">
+        <h3 class="font-black text-slate-800 text-base">🗺️ आपकी लर्निंग पाथ (Skill Path)</h3>
+        <div class="flex justify-center items-center gap-6 py-4">
+          <div class="path-node bg-[#58cc02] text-white">⭐</div>
+          <div class="w-12 h-2 bg-slate-200 rounded-full"></div>
+          <div class="path-node bg-[#1cb0f6] text-white">📖</div>
+          <div class="w-12 h-2 bg-slate-200 rounded-full"></div>
+          <div class="path-node bg-slate-200 text-slate-400">🔒</div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- VIEW PRACTICE & LESSON WINDOW -->
-    <div id="viewPractice" class="hidden max-w-3xl w-full mx-auto px-4 py-8 flex-1 space-y-6 slide-in-up">
-      <div class="flex items-center justify-between">
-        <button onclick="returnToDashboard()" class="bg-white border-2 border-slate-300 hover:bg-slate-100 text-slate-700 font-bold px-4 py-2.5 rounded-2xl shadow-sm transition text-xs">
-          ← डैशबोर्ड पर वापस जाएं
+    <!-- VIEW 2: ACTIVE LESSON SCREEN (Duolingo Interactive Game) -->
+    <div id="viewLesson" class="hidden max-w-2xl w-full mx-auto px-4 py-8 flex-1 flex flex-col justify-between">
+      
+      <!-- Top Lesson Progress Bar -->
+      <div class="flex items-center gap-4">
+        <button onclick="exitLesson()" class="text-slate-400 font-black text-xl hover:text-slate-700">✕</button>
+        <div class="flex-1 bg-slate-200 h-4 rounded-full overflow-hidden">
+          <div id="lessonProgressBar" class="bg-[#58cc02] h-full rounded-full transition-all duration-300" style="width: 33%;"></div>
+        </div>
+        <div class="text-rose-500 font-black flex items-center gap-1">
+          ❤️ <span id="lessonHearts">5</span>
+        </div>
+      </div>
+
+      <!-- Lesson Card Body -->
+      <div class="space-y-6 my-auto py-6">
+        <div class="flex items-center gap-3 bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl">
+          <span class="text-3xl bounce-anim">🦊</span>
+          <p id="foxyPrompt" class="text-sm font-black text-amber-900">फॉक्सी शिक्षक: सही विकल्प पर क्लिक करें!</p>
+        </div>
+
+        <h2 id="lessonQuestion" class="text-xl md:text-2xl font-black text-slate-800">Question goes here?</h2>
+
+        <!-- Options Grid -->
+        <div id="lessonOptions" class="grid grid-cols-1 gap-3"></div>
+      </div>
+
+      <!-- Bottom Action / Feedback Footer -->
+      <div id="lessonFooter" class="border-t-2 border-slate-200 pt-4 flex items-center justify-between">
+        <div id="feedbackText" class="font-black text-base"></div>
+        <button onclick="nextLessonStep()" id="btnCheckAction" disabled class="bg-slate-200 text-slate-400 font-black px-8 py-3.5 rounded-2xl cursor-not-allowed uppercase tracking-wider text-sm">
+          आगे बढ़ें
         </button>
-        <span id="practiceCategoryBadge" class="bg-emerald-100 text-emerald-800 font-extrabold text-xs px-4 py-1.5 rounded-full uppercase tracking-wider">English Lesson</span>
       </div>
 
-      <!-- Lesson Box -->
-      <div class="bg-white rounded-[32px] p-6 md:p-8 border-2 border-slate-200 shadow-xl space-y-6">
-        
-        <!-- AI Teacher & Fox Header -->
-        <div class="flex items-center gap-4 bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl">
-          <div class="text-3xl bounce-fox">🦊</div>
-          <div>
-            <h4 class="text-xs font-extrabold text-amber-900 uppercase">AI Foxy Teacher</h4>
-            <p id="aiGuidanceText" class="text-sm font-bold text-slate-800 mt-0.5">ध्यान से नियम समझें और सही उत्तर चुनें!</p>
-          </div>
-          <button onclick="speakLessonAudio()" class="ml-auto bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold px-3 py-2 rounded-xl text-xs shadow">
-            🔊 सुनें
-          </button>
-        </div>
-
-        <div class="space-y-3">
-          <h2 id="lessonTitle" class="text-xl md:text-2xl font-extrabold text-slate-900">Topic Title</h2>
-          <p id="lessonExplanation" class="text-sm md:text-base text-slate-600 leading-relaxed font-medium"></p>
-        </div>
-
-        <!-- Quiz Section -->
-        <div class="space-y-3 pt-2">
-          <div class="text-xs font-extrabold uppercase text-slate-400">Quiz Challenge (सही विकल्प चुनें):</div>
-          <p id="quizQuestion" class="text-lg font-extrabold text-slate-900"></p>
-          <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"></div>
-        </div>
-
-        <div id="quizFeedbackBox" class="hidden p-4 rounded-2xl border-2 text-sm font-bold"></div>
-
-        <div class="pt-4 border-t-2 border-slate-100 flex items-center justify-between">
-          <button onclick="startVoiceInput()" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold px-4 py-3 rounded-2xl text-xs shadow flex items-center gap-2">
-            🎙️ बोलकर अभ्यास करें
-          </button>
-          <button onclick="nextLevelAction()" id="btnNextLevel" disabled class="bg-slate-300 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-none cursor-not-allowed transition">
-            अगला स्तर अनलॉक करें →
-          </button>
-        </div>
-
-      </div>
     </div>
 
   </div>
 
-  <footer class="bg-slate-900 text-slate-400 text-xs py-4 px-4 text-center mt-auto">
+  <footer class="bg-white border-t border-slate-200 text-slate-400 text-xs font-bold py-3 px-4 text-center mt-auto">
     <strong>Shiksha Setu AI</strong> — Duolingo-Style Gamified Learning Platform 🇮🇳
   </footer>
 
   <script>
+    // ================= WEB AUDIO API SOUND GENERATOR (DUOLINGO STYLE) =================
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playSound(type) {
+      if (!audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      const now = audioCtx.currentTime;
+      if (type === 'success') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+        osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } else if (type === 'error') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.setValueAtTime(110, now + 0.15);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      }
+    }
+
     // ================= STATE & DATA =================
     let currentUser = JSON.parse(localStorage.getItem('shiksha_duo_user')) || null;
-    let currentSubject = 'english';
-    let currentLevelIdx = 0;
+    let currentSubjectKey = 'english';
+    let currentStepIdx = 0;
+    let selectedOptionIdx = null;
 
-    const database = {
+    const gameData = {
       english: [
-        { title: "Level 1: Phonics & ABC", exp: "अंग्रेज़ी अक्षरों की आवाज़ (Phonics) पहचानें। A for Apple, B for Ball.", q: "Apple (सेब) की शुरुआत किस अंग्रेज़ी अक्षर से होती है?", options: ["B", "C", "A", "M"], correct: 2, feedback: "शाबाश! A for Apple होता है। (+20 XP)" },
-        { title: "Level 2: Self Introduction", exp: "अपना परिचय देते समय 'मेरा नाम' कहने के लिए 'My name is' का उपयोग करते हैं।", q: "अपने नाम बताने के लिए सही वाक्य चुनें:", options: ["My name is...", "You are...", "He is...", "They are..."], correct: 0, feedback: "बिल्कुल सही! My name is... बोला जाता है। (+20 XP)" },
-        { title: "Level 3: Polite Expressions", exp: "किसी से विनम्रता से मदद मांगने के लिए 'Please help me' कहते हैं।", q: "'कृपया मेरी मदद करें' को अंग्रेज़ी में क्या कहेंगे?", options: ["Thank you", "Please help me", "Good morning", "Goodbye"], correct: 1, feedback: "बहुत बढ़िया! Please help me सही है। (+20 XP)" }
+        { q: "Apple (सेब) की शुरुआत किस अंग्रेज़ी अक्षर से होती है?", options: ["B", "C", "A", "M"], correct: 2, exp: "A for Apple होता है!" },
+        { q: "अपने परिचय में 'मेरा नाम' कहने के लिए क्या बोलते हैं?", options: ["My name is...", "You are...", "He is...", "They are..."], correct: 0, exp: "My name is... बोला जाता है।" },
+        { q: "'कृपया मेरी मदद करें' को अंग्रेज़ी में क्या कहेंगे?", options: ["Thank you", "Please help me", "Good morning", "Goodbye"], correct: 1, exp: "Please help me सबसे विनम्र तरीका है।" }
       ],
       hindi: [
-        { title: "Level 1: Swar & Vyanjan", exp: "हिंदी वर्णमाला में स्वर (Vowels) और व्यंजन (Consonants) होते हैं।", q: "इनमें से कौन-सा स्वर (Vowel) है?", options: ["क", "च", "अ", "म"], correct: 2, feedback: "सही! 'अ' एक स्वर है। (+20 XP)" },
-        { title: "Level 2: Matrayen", exp: "क अक्षर पर आ की मात्रा ('ा') लगाने से 'का' बनता है।", q: "क + ा से क्या बनेगा?", options: ["कि", "कु", "का", "के"], correct: 2, feedback: "शानदार! 'का' बनता है। (+20 XP)" },
-        { title: "Level 3: Sangya (Noun)", exp: "किसी व्यक्ति, वस्तु या स्थान के नाम को संज्ञा कहते हैं।", q: "इनमें से कौन-सा शब्द किसी स्थान (Place) का नाम है?", options: ["किताब", "दिल्ली", "पेन", "कुर्सी"], correct: 1, feedback: "बिल्कुल सही! दिल्ली एक स्थान का नाम है। (+20 XP)" }
+        { q: "इनमें से कौन-सा स्वर (Vowel) है?", options: ["क", "च", "अ", "म"], correct: 2, exp: "'अ' एक स्वर है।" },
+        { q: "क अक्षर पर आ की मात्रा ('ा') लगाने से क्या बनेगा?", options: ["कि", "कु", "का", "के"], correct: 2, exp: "क + ा = का बनता है।" },
+        { q: "किसी व्यक्ति या स्थान के नाम को क्या कहते हैं?", options: ["संज्ञा (Noun)", "सर्वनाम", "क्रिया", "विशेषण"], correct: 0, exp: "उसे संज्ञा कहते हैं।" }
       ],
       maths: [
-        { title: "Level 1: Basic Counting", exp: "जोड़ का मतलब चीज़ों को एक साथ गिनना होता है।", q: "यदि आपके पास 3 पेंसिल हैं और 2 और मिल गईं, तो कुल कितनी हुईं?", options: ["4", "5", "6", "3"], correct: 1, feedback: "सही! 3 + 2 = 5 होता है। (+20 XP)" },
-        { title: "Level 2: Multiplication Tables", exp: "पहाड़े याद रखने से गणना बहुत तेज़ हो जाती है।", q: "2 का पहाड़ा 3 बार पढ़ने पर कितना आता है? (2 × 3)", options: ["4", "5", "6", "8"], correct: 2, feedback: "बिल्कुल सही! 2 तिया 6 होता है। (+20 XP)" },
-        { title: "Level 3: Daily Percentage", exp: "किसी भी संख्या का 10% निकालने के लिए आख़िरी शून्य हटा देते हैं।", q: "₹100 की चीज़ पर 10% छूट मिलने पर कितने रुपये कम होंगे?", options: ["₹5", "₹10", "₹20", "₹50"], correct: 1, feedback: "शाबाश! ₹10 होता है। (+20 XP)" }
+        { q: "यदि आपके पास 3 पेंसिल हैं और 2 और मिल गईं, तो कुल कितनी हुईं?", options: ["4", "5", "6", "3"], correct: 1, exp: "3 + 2 = 5 होता है।" },
+        { q: "2 का पहाड़ा 3 बार पढ़ने पर कितना आता है? (2 × 3)", options: ["4", "5", "6", "8"], correct: 2, exp: "2 तिया 6 होता है।" },
+        { q: "₹100 की चीज़ पर 10% छूट मिलने पर कितने रुपये कम होंगे?", options: ["₹5", "₹10", "₹20", "₹50"], correct: 1, exp: "₹100 का 10% ₹10 होता है।" }
       ],
       career: [
-        { title: "Level 1: Railway & SSC Clerks", exp: "10वीं और 12वीं के बाद रेलवे (RRB NTPC) और SSC CHSL क्लर्क की सरकारी नौकरी पा सकते हैं।", q: "रेलवे क्लर्क परीक्षा के लिए न्यूनतम योग्यता क्या है?", options: ["8वीं पास", "12वीं पास", "इंजीनियरिंग डिग्री", "कोई नहीं"], correct: 1, feedback: "सही! 12वीं पास विद्यार्थी इसके योग्य हैं। (+20 XP)" },
-        { title: "Level 2: Polytechnic Diploma", exp: "10वीं के बाद महंगे बी.टेक के बजाय राजकीय पॉलिटेक्निक से 3 साल का डिप्लोमा करें।", q: "पॉलिटेक्निक डिप्लोमा कितने साल का होता है?", options: ["1 साल", "2 साल", "3 साल", "5 साल"], correct: 2, feedback: "बिल्कुल सही! 3 साल का कोर्स होता है। (+20 XP)" },
-        { title: "Level 3: Banking & Corporate QA", exp: "अगर आपकी अंग्रेजी और कंप्यूटर स्किल्स अच्छी हैं, तो बैकिंग और क्वालिटी एनालिस्ट में बेहतरीन करियर है।", q: "कॉर्पोरेट जॉब्स के लिए कौन-सी स्किल सबसे ज़रूरी है?", options: ["सिर्फ रट्टा मारना", "English Speaking & Basic Computer", "खेती करना", "ड्राइविंग"], correct: 1, feedback: "शानदार! भाषा और कंप्यूटर स्किल्स सबसे ज़रूरी हैं। (+20 XP)" }
+        { q: "10वीं और 12वीं के बाद रेलवे क्लर्क (RRB NTPC) परीक्षा के लिए न्यूनतम योग्यता क्या है?", options: ["8वीं पास", "12वीं पास", "इंजीनियरिंग डिग्री", "कोई नहीं"], correct: 1, exp: "12वीं पास विद्यार्थी इसके योग्य हैं।" },
+        { q: "10वीं के बाद राजकीय पॉलिटेक्निक डिप्लोमा कितने साल का होता है?", options: ["1 साल", "2 साल", "3 साल", "5 साल"], correct: 2, exp: "3 साल का टेक्निकल कोर्स होता है।" },
+        { q: "कॉर्पोरेट और बैंकिंग जॉब्स के लिए कौन-सी स्किल सबसे ज़रूरी है?", options: ["सिर्फ रट्टा मारना", "English Speaking & Computer", "खेती करना", "ड्राइविंग"], correct: 1, exp: "भाषा और कंप्यूटर स्किल्स सबसे ज़रूरी हैं।" }
       ]
     };
 
@@ -303,8 +306,8 @@
     window.onload = () => {
       if (currentUser) {
         document.getElementById('loginModal').classList.add('hidden');
-        document.getElementById('mainAppContainer').classList.remove('hidden');
-        renderDashboardUI();
+        document.getElementById('mainApp').classList.remove('hidden');
+        renderStats();
       } else {
         document.getElementById('loginModal').classList.remove('hidden');
       }
@@ -314,147 +317,127 @@
       document.getElementById('loginModal').classList.remove('hidden');
     }
 
-    function submitLogin() {
-      const name = document.getElementById('loginName').value.trim();
-      const credential = document.getElementById('loginCredential').value.trim();
-      const classLevel = document.getElementById('loginClass').value;
-
-      if (!name || !credential) {
-        alert("कृपया अपना नाम और मोबाइल नंबर/ईमेल दर्ज करें।");
+    function handleLoginSubmit() {
+      const name = document.getElementById('userNameInput').value.trim();
+      const cred = document.getElementById('userCredInput').value.trim();
+      if (!name || !cred) {
+        alert("कृपया अपना नाम और मोबाइल नंबर दर्ज करें।");
         return;
       }
 
       currentUser = {
         name,
-        credential,
-        classLevel,
-        xp: 120,
+        cred,
         streak: 3,
-        progress: { english: 0, hindi: 0, maths: 0, career: 0 }
+        xp: 150,
+        hearts: 5,
+        progress: { english: 0, hindi: 1, maths: 0, career: 1 }
       };
 
       localStorage.setItem('shiksha_duo_user', JSON.stringify(currentUser));
       document.getElementById('loginModal').classList.add('hidden');
-      document.getElementById('mainAppContainer').classList.remove('hidden');
-      renderDashboardUI();
+      document.getElementById('mainApp').classList.remove('hidden');
+      renderStats();
     }
 
-    function renderDashboardUI() {
-      document.getElementById('badgeUser').innerText = currentUser.name;
-      document.getElementById('xpCount').innerText = `${currentUser.xp} XP`;
-      document.getElementById('streakCount').innerText = `${currentUser.streak} Days Streak`;
-
-      document.getElementById('progEnglish').innerText = `${currentUser.progress.english} / 3 Levels`;
-      document.getElementById('progHindi').innerText = `${currentUser.progress.hindi} / 3 Levels`;
-      document.getElementById('progMaths').innerText = `${currentUser.progress.maths} / 3 Levels`;
-      document.getElementById('progCareer').innerText = `${currentUser.progress.career} / 3 Roadmaps`;
+    function renderStats() {
+      document.getElementById('headerName').innerText = currentUser.name;
+      document.getElementById('statStreak').innerText = currentUser.streak;
+      document.getElementById('statXP').innerText = currentUser.xp;
+      document.getElementById('statHearts').innerText = currentUser.hearts;
     }
 
-    // ================= SUBJECT & LESSON FLOW =================
-    function openSubject(subject) {
-      currentSubject = subject;
-      currentLevelIdx = currentUser.progress[subject] || 0;
-      if (currentLevelIdx >= 3) currentLevelIdx = 2;
-
+    // ================= LESSON FLOW =================
+    function selectSubject(subjectKey) {
+      currentSubjectKey = subjectKey;
+      currentStepIdx = 0;
       document.getElementById('viewDashboard').classList.add('hidden');
-      document.getElementById('viewPractice').classList.remove('hidden');
-
-      const titles = { english: "English Speaking", hindi: "Hindi Vyakaran", maths: "Maths Foundation", career: "Career Counselling" };
-      document.getElementById('practiceCategoryBadge').innerText = titles[subject];
-      loadLessonContent();
+      document.getElementById('viewLesson').classList.remove('hidden');
+      loadLessonStep();
     }
 
-    function returnToDashboard() {
-      document.getElementById('viewPractice').classList.add('hidden');
+    function exitLesson() {
+      document.getElementById('viewLesson').classList.add('hidden');
       document.getElementById('viewDashboard').classList.remove('hidden');
-      renderDashboardUI();
+      renderStats();
     }
 
-    function loadLessonContent() {
-      const list = database[currentSubject];
-      const item = list[currentLevelIdx];
+    function loadLessonStep() {
+      const list = gameData[currentSubjectKey];
+      if (currentStepIdx >= list.length) {
+        alert("🎉 बधाई हो! आपने इस विषय का पाठ पूरा कर लिया है! (+50 XP)");
+        currentUser.xp += 50;
+        localStorage.setItem('shiksha_duo_user', JSON.stringify(currentUser));
+        exitLesson();
+        return;
+      }
 
-      document.getElementById('lessonTitle').innerText = item.title;
-      document.getElementById('lessonExplanation').innerText = item.exp;
-      document.getElementById('aiGuidanceText').innerText = `फॉक्सी शिक्षक: ${item.title} का अभ्यास करें!`;
-      document.getElementById('quizQuestion').innerText = item.q;
-      document.getElementById('quizFeedbackBox').classList.add('hidden');
+      const item = list[currentStepIdx];
+      document.getElementById('lessonQuestion').innerText = item.q;
+      document.getElementById('lessonHearts').innerText = currentUser.hearts;
+      
+      const progressPercent = ((currentStepIdx) / list.length) * 100;
+      document.getElementById('lessonProgressBar').style.width = `${Math.max(15, progressPercent)}%`;
 
-      const nextBtn = document.getElementById('btnNextLevel');
-      nextBtn.disabled = true;
-      nextBtn.className = "bg-slate-300 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-none cursor-not-allowed transition";
+      const footerBtn = document.getElementById('btnCheckAction');
+      footerBtn.disabled = true;
+      footerBtn.className = "bg-slate-200 text-slate-400 font-black px-8 py-3.5 rounded-2xl cursor-not-allowed uppercase tracking-wider text-sm";
+      document.getElementById('feedbackText').innerText = "";
 
-      const grid = document.getElementById('quizOptions');
+      const grid = document.getElementById('lessonOptions');
       grid.innerHTML = '';
+      selectedOptionIdx = null;
+
       item.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.className = "text-left font-bold p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition text-sm text-slate-800 shadow-sm bg-white";
+        btn.className = "text-left font-black p-4 rounded-2xl border-2 border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition text-base text-slate-700 bg-white shadow-sm";
         btn.innerText = `${idx + 1}. ${opt}`;
-        btn.onclick = () => checkQuizOption(idx, item.correct, item.feedback);
+        btn.onclick = () => {
+          selectedOptionIdx = idx;
+          // Highlight selected
+          Array.from(grid.children).forEach(b => b.classList.remove('border-sky-500', 'bg-sky-50'));
+          btn.classList.add('border-sky-500', 'bg-sky-50');
+          
+          footerBtn.disabled = false;
+          footerBtn.className = "bg-[#58cc02] hover:bg-[#46a302] text-white font-black px-8 py-3.5 rounded-2xl duo-btn uppercase tracking-wider text-sm shadow-md cursor-pointer";
+        };
         grid.appendChild(btn);
       });
     }
 
-    function checkQuizOption(selected, correct, feedbackText) {
-      const box = document.getElementById('quizFeedbackBox');
-      box.classList.remove('hidden');
-      const nextBtn = document.getElementById('btnNextLevel');
+    function nextLessonStep() {
+      const list = gameData[currentSubjectKey];
+      const item = list[currentStepIdx];
+      const footerBtn = document.getElementById('btnCheckAction');
+      const feedbackDiv = document.getElementById('feedbackText');
 
-      if (selected === correct) {
-        box.className = "p-4 rounded-2xl border-2 bg-emerald-50 border-emerald-400 text-emerald-950 text-sm font-bold shadow-sm";
-        box.innerHTML = `🎉 <strong>बिल्कुल सही जवाब!</strong><br>${feedbackText}`;
+      if (selectedOptionIdx === item.correct) {
+        playSound('success');
+        feedbackDiv.className = "font-black text-emerald-600 text-base";
+        feedbackDiv.innerHTML = `🎉 सही जवाब! ${item.exp}`;
+        currentUser.xp += 10;
         
-        currentUser.xp += 20;
-        localStorage.setItem('shiksha_duo_user', JSON.stringify(currentUser));
-        document.getElementById('xpCount').innerText = `${currentUser.xp} XP`;
-
-        nextBtn.disabled = false;
-        nextBtn.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-lg duo-btn-green transition cursor-pointer";
+        footerBtn.innerText = "अगला सवाल →";
+        footerBtn.onclick = () => {
+          currentStepIdx++;
+          footerBtn.onclick = nextLessonStep;
+          footerBtn.innerText = "आगे बढ़ें";
+          loadLessonStep();
+        };
       } else {
-        box.className = "p-4 rounded-2xl border-2 bg-rose-50 border-rose-300 text-rose-950 text-sm font-bold shadow-sm";
-        box.innerHTML = `❌ <strong>उत्तर सही नहीं है। फॉक्सी के साथ दोबारा प्रयास करें!</strong>`;
+        playSound('error');
+        currentUser.hearts = Math.max(0, currentUser.hearts - 1);
+        document.getElementById('lessonHearts').innerText = currentUser.hearts;
+        feedbackDiv.className = "font-black text-rose-600 text-base";
+        feedbackDiv.innerHTML = `❌ गलत जवाब। सही उत्तर: ${item.exp}`;
+        
+        if (currentUser.hearts <= 0) {
+          alert("💔 आपके सभी हर्ट्स समाप्त हो गए! थोड़ा आराम करें और फिर कोशिश करें।");
+          currentUser.hearts = 5;
+          exitLesson();
+        }
       }
-    }
-
-    function nextLevelAction() {
-      if (currentLevelIdx + 1 > currentUser.progress[currentSubject]) {
-        currentUser.progress[currentSubject] = currentLevelIdx + 1;
-        localStorage.setItem('shiksha_duo_user', JSON.stringify(currentUser));
-      }
-
-      currentLevelIdx++;
-      if (currentLevelIdx >= database[currentSubject].length) {
-        alert("🎉 बधाई हो! आपने इस विषय के सभी स्तर पूरे कर लिए हैं!");
-        returnToDashboard();
-      } else {
-        loadLessonContent();
-      }
-    }
-
-    function speakLessonAudio() {
-      const item = database[currentSubject][currentLevelIdx];
-      const text = `${item.title}. ${item.exp}. सवाल है: ${item.q}`;
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = currentSubject === 'english' ? 'en-IN' : 'hi-IN';
-        window.speechSynthesis.speak(u);
-      }
-    }
-
-    function startVoiceInput() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert("माइक्रोफ़ोन इस ब्राउज़र में समर्थित नहीं है।");
-        return;
-      }
-      const rec = new SpeechRecognition();
-      rec.lang = currentSubject === 'english' ? 'en-IN' : 'hi-IN';
-      alert("🎙️ फॉक्सी सुन रहा है... साफ़ आवाज़ में बोलिए!");
-      rec.onresult = (e) => {
-        alert(`शानदार! आपने बोला: "${e.results[0][0].transcript}"`);
-      };
-      rec.start();
+      localStorage.setItem('shiksha_duo_user', JSON.stringify(currentUser));
     }
   </script>
 </body>
